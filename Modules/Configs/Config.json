@@ -1,0 +1,8 @@
+{
+    "prefix": "/",
+    "ownerBot": { 
+        "id": "315526915828219906",
+        "ex": true
+    },
+    "update": "config.json will soon be removed and owner bot goes to Sectres.json and prefix will goto firestore"
+}

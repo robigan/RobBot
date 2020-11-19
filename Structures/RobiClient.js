@@ -3,24 +3,31 @@ const { Client, Collection } = require("discord.js");
 const Util = require("./Util.js");
 
 module.exports = class RobiClient extends Client {
-    constructor(config = {}, LocRes) {
+    constructor(config = {}) {
         super({
             messageCacheMaxSize: 200,
             messageCacheLifetime: 3600,
             messageSweepInterval: 60
         });
-        this.validate(config, LocRes);
+
+        this.validate(config);
 
         this.commands = new Collection();
         this.aliases = new Collection();
+        this.eventHandlers = new Collection();
         this.utils = new Util(this);
 
         this.once("ready", () => {
             console.log(`Logged is as ${this.user.tag}`);
+            console.info("Starting register process of event handlers");
+            this.utils.loadEventHandlers().catch((err) => {
+                console.error(err);
+            });
+            console.info("Register process of event handlers complete");
         });
 
-        this.on("message", async (message) => {
-            //const mentionRegex = RegExp(`^<@!${this.user.id}>$`);
+        /*this.on('message', async (message) => {
+            const mentionRegex = RegExp(`^<@!${this.user.id}>$`); //For the meantime
             const mentionRegexPrefix = RegExp(`^<@!${this.user.id}> `);
 
             function STFU (Chance) {
@@ -33,8 +40,7 @@ module.exports = class RobiClient extends Client {
 
             if (!message.guild || message.author.bot) return;
 
-            //if (message.content.match(mentionRegex)) message.reply(`My prefix for this guild is \`${this.prefix}\` :D`);
-
+            if (message.content.match(mentionRegex)) message.reply(`My prefix for this guild is \`${this.prefix}\` :D`); //For the meantime
             const prefix = message.content.match(mentionRegexPrefix) ? message.content.match(mentionRegexPrefix)[0] : this.prefix;
             const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
 
@@ -44,17 +50,18 @@ module.exports = class RobiClient extends Client {
                 if (STFU(20)) return;
                 message.guild.fetch().catch(err => {
                     console.error(err);
-                }); //Update the cache for this server
+                    message.reply(`Error when fetching guild update, ${err}`);
+                });
                 command.run(message, args).catch(err => {
                     console.error(err);
-                }); // Y not
+                    message.reply(`Error when running command, ${err}`);
+                });
             }
-        });
+        });*/
     }
 
-    validate(config, LocRes) {
-        if ((typeof config !== "object") && (typeof LocRes !== "object")) throw new TypeError("Config and LocRes should be a type of Object");
-        this.locRes = LocRes;
+    validate(config) {
+        if (typeof config !== "object") throw new TypeError("Config and should be a type of Object");
 
         if (!config.token) throw new Error("You must pass the token for the client");
         this.token = config.token;
@@ -67,7 +74,9 @@ module.exports = class RobiClient extends Client {
     }
 
     async start(token = this.token) {
-        this.utils.loadCommands();
+        await this.utils.loadCommands().catch((err) => {
+            console.error(err);
+        });
         super.login(token);
     }
 };

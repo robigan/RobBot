@@ -1,9 +1,9 @@
 // JavaScript source code
-const LocRes = new (require('./Structures/LocationResolver'));
-const RobiClient = require(LocRes.redirect('Structures/RobiClient.js'));
-const Config = Object.assign(require(LocRes.redirect('Configs/Config.json')), require(LocRes.redirect('Configs/Secrets.json')));
+//const LocRes = new (require("./Structures/LocationResolver"));
+const RobiClient = require("./Structures/RobiClient.js");
+const Config = require("./Modules/Configs/Secrets.json");
 
-const Client = new RobiClient(Config, LocRes);
+const Client = new RobiClient(Config);
 Client.start();
 
 //This was built on MenuDocs tutorial and I plan to use it as my framework

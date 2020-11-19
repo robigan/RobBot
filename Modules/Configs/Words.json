@@ -1,0 +1,20 @@
+{
+    "banWords": [
+        "turret",
+        "fuck",
+        "cunt",
+        "shit",
+        "manager sucks",
+        "asshole",
+        "nigger",
+        "niger",
+        "gay"
+    ],
+    "excluded": [
+        {"id":"570667736427135022", "ex": true}
+    ],
+    "gays": [
+        "People who need to be on the naughtly list",
+        "539954011403452421"
+    ]
+}
