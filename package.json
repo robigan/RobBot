@@ -1,0 +1,32 @@
+{
+  "name": "robbot",
+  "version": "0.3.1",
+  "description": "Robigan's discord bot",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.4.1",
+    "glob-promise": "^3.4.0",
+    "log": "^6.0.0",
+    "ms": "^2.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "robigan",
+    "robibot",
+    "robot",
+    "discord.js"
+  ],
+  "author": "robigan",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robigan/RobBot"
+  },
+  "license": ""
+}
