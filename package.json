@@ -4,9 +4,10 @@
   "description": "Robigan's discord bot",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^12.4.1",
+    "cloudstorm": "git+https://github.com/AmandaDiscord/CloudStorm.git",
     "glob-promise": "^3.4.0",
-    "ms": "^2.1.2"
+    "ms": "^2.1.2",
+    "snowtransfer": "git+https://github.com/AmandaDiscord/SnowTransfer.git"
   },
   "devDependencies": {
     "eslint": "^7.13.0"
@@ -18,9 +19,10 @@
     "discord",
     "bot",
     "robigan",
+    "robbot",
     "robibot",
-    "robot",
-    "discord.js"
+    "snowtransfer",
+    "cloudstorm"
   ],
   "author": "robigan",
   "repository": {

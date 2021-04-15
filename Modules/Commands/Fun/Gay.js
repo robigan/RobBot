@@ -1,6 +1,6 @@
 const Command = require("../../../Structures/Command.js");
 const { MessageEmbed } = require("discord.js");
-const { gays: Gays } = require("../../Configs/Words.json");
+const { gays: Gays } = require("../../../Configs/Words.json");
 
 module.exports = class extends Command {
     constructor(...args) {

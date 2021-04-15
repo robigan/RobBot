@@ -1,8 +1,9 @@
 // JavaScript source code
 const RobiClient = require("./Structures/RobiClient.js");
-const Config = require("./Modules/Configs/Secrets.json");
+const SecretConfig = require("./Configs/Secrets.json");
+const Config = require("./Configs/Configs.json");
 
-const Client = new RobiClient(Config);
+const Client = new RobiClient(Object.assign(Config, SecretConfig));
 Client.start();
 
 //This was built on MenuDocs tutorial and I plan to use it as my framework
