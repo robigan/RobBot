@@ -3,15 +3,12 @@ const EventHandler = require("../../Structures/EventHandler.js");
 module.exports = class extends EventHandler {
     constructor(...args) {
         super(...args, "Default message event handler");
-    }
+        this.client.on("message", async (message) => {
+            const mentionRegex = RegExp(`^<@!${this.client.user.id}>$`);
+            const mentionRegexPrefix = RegExp(`^<@!${this.client.user.id}> `);
 
-    async register() {
-        this.client.on("message", (message) => {
-            const mentionRegex = RegExp(`^<@!${this.user.id}>$`);
-            const mentionRegexPrefix = RegExp(`^<@!${this.user.id}> `);
-
-            function STFU (Chance) {
-                if (Math.floor(Math.random()*Chance) === 1) {
+            function STFU(Chance) {
+                if (Math.floor(Math.random() * Chance) === 1) {
                     message.reply("STFU");
                     return true;
                 }
@@ -21,11 +18,11 @@ module.exports = class extends EventHandler {
             if (!message.guild || message.author.bot) return;
 
             if (message.content.match(mentionRegex)) message.reply(`My prefix for this guild is \`${this.prefix}\` :D`);
-            const prefix = message.content.match(mentionRegexPrefix) ? message.content.match(mentionRegexPrefix)[0] : this.prefix;
+            const prefix = message.content.match(mentionRegexPrefix) ? message.content.match(mentionRegexPrefix)[0] : this.client.prefix;
             const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
 
             //To patch running multiple commands
-            const command = this.client.commands.get(cmd.toLowerCase()) || this.client.commands.get(this.aliases.get(cmd.toLowerCase()));
+            const command = this.client.commands.get(cmd.toLowerCase()) || this.client.commands.get(this.client.aliases.get(cmd.toLowerCase()));
             if (command) {
                 if (STFU(20)) return;
                 message.guild.fetch().catch(err => {

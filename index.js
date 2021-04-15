@@ -1,5 +1,4 @@
 // JavaScript source code
-//const LocRes = new (require("./Structures/LocationResolver"));
 const RobiClient = require("./Structures/RobiClient.js");
 const Config = require("./Modules/Configs/Secrets.json");
 

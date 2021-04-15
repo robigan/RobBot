@@ -5,8 +5,4 @@ module.exports = class EventHandler {
         this.description = description || "No description provided";
         this.flags = flags;
     }
-
-    async register() {
-        throw new Error(`EventHandler ${this.name} doesn't provide a register method`);
-    }
 };
