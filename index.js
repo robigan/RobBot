@@ -1,7 +1,7 @@
 // JavaScript source code
 const RobiClient = require("./Structures/RobiClient.js");
 const SecretConfig = require("./Configs/Secrets.json");
-const Config = require("./Configs/Configs.json");
+const Config = require("./Configs/Config.json");
 
 const Client = new RobiClient(Object.assign(Config, SecretConfig));
 Client.start();

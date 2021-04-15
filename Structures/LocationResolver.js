@@ -25,6 +25,7 @@ module.exports = class LocRes {
                 return false;
             } else {
                 console.error("LocRes error whilst validating: ", err.code);
+                return false;
             }
         });
     }

@@ -27,7 +27,7 @@ module.exports = class Util {
                 this.client.commands.set(command.name, command);
                 if (command.aliases.length) {
                     for (const alias of command.aliases) {
-                        if (this.client.aliases.get(alias.toLowerCase())) throw new SyntaxError(`Alias ${alias} has already been defined, please rename ${command.name} to something else`);
+                        if (this.client.aliases.get(alias.toLowerCase()) || this.client.commands.get(alias.toLowerCase())) throw new SyntaxError(`Alias ${alias} has already been defined, please rename ${command.name} to something else`);
                         this.client.aliases.set(alias.toLowerCase(), command.name);
                     }
                 }
