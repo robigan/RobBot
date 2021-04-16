@@ -11,7 +11,7 @@ module.exports = class Command {
 
     // eslint-disable-next-line no-unused-vars
     async run(message, args) {
-        throw new Error(`Command ${this.name} doesn't provide a run method`);
+        console.log(`Command ${this.name} doesn't provide a run method`);
     }
 
     async report(author, action) {

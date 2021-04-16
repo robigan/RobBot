@@ -5,7 +5,7 @@ module.exports = class extends EventHandler {
         super(...args, "Default ready event handler");
     }
 
-    async main(event, data) {
+    async run(event, data) {
 
     }
 };

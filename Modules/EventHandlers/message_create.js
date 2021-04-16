@@ -5,7 +5,7 @@ module.exports = class extends EventHandler {
         super(...args, "Default message event handler");
     }
 
-    async main(event, message) {
+    async run(event, message) {
         const mentionRegex = RegExp(`^<@!${this.client.user.id}>$`);
         const mentionRegexPrefix = RegExp(`^<@!${this.client.user.id}> `);
 

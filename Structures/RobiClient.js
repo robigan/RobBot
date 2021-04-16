@@ -24,7 +24,7 @@ module.exports = class RobiClient extends SnowTransfer {
             this.debug.type ? console.log(`Event received, type ${event.t}`) : undefined;
             this.debug.data && this.debug.data[event.t] ? console.log("data", event.d) : undefined;
             if (event.t && this.eventHandlers.get((event.t).toLowerCase())) {
-                this.eventHandlers.get((event.t).toLowerCase());
+                console.log(this.eventHandlers.get((event.t).toLowerCase()));
             }
         });
 
@@ -39,8 +39,8 @@ module.exports = class RobiClient extends SnowTransfer {
         if (!config.token) throw new Error("You must pass the token for the client");
         this.token = config.token;
 
-        if (!config.CloudStorm) throw new Error("You must pass a CloudStorm configuration!");
-        if (typeof config.CloudStorm !== "object") throw new Error("CloudStorm config must be an object!");
+        if (!config.CloudStorm) throw new Error("You must pass a CloudStorm configuration");
+        if (typeof config.CloudStorm !== "object") throw new Error("CloudStorm config must be an object");
         this.CloudStorm = new CloudStorm(config.token, config.CloudStorm);
 
         if (!config.prefix) throw new Error("You must pass a prefix for the client");
