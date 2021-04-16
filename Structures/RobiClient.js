@@ -24,7 +24,7 @@ module.exports = class RobiClient extends SnowTransfer {
             this.debug.type ? console.log(`Event received, type ${event.t}`) : undefined;
             this.debug.data && this.debug.data[event.t] ? console.log("data", event.d) : undefined;
             if (event.t && this.eventHandlers.get((event.t).toLowerCase())) {
-                console.log(this.eventHandlers.get((event.t).toLowerCase()));
+                (this.eventHandlers.get((event.t).toLowerCase())).run(event, event.d);
             }
         });
 
