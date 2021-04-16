@@ -1,6 +1,5 @@
 const Command = require("../../../Structures/Command.js");
-const { MessageEmbed } = require("discord.js");
-const { gays: Gays } = require("../../../Configs/Words.json");
+const MessageEmbed = require("../../../Structures/MessageEmbed.js");
 
 module.exports = class extends Command {
     constructor(...args) {
@@ -8,7 +7,7 @@ module.exports = class extends Command {
     }
 
     async run(message) {
-        const Gay = Gays.includes(message.author.id) ? "100" : Math.floor(Math.random() * 100);
+        const Gay = Math.floor(Math.random() * 100);
         const embed = new MessageEmbed()
             .setAuthor(message.author.tag)
             .setColor("LUMINOUS_VIVID_PINK")

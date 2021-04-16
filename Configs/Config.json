@@ -17,8 +17,10 @@
     "debug": {
         "type": true,
         "data": {
-            "READY": false
+            "READY": false,
+            "MESSAGE_CREATE": true
         },
+        "command": true,
         "init": true
     }
 }

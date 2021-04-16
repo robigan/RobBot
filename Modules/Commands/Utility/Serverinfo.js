@@ -1,5 +1,5 @@
 const Command = require("../../../Structures/Command.js");
-const { MessageEmbed } = require("discord.js");
+const MessageEmbed = require("../../../Structures/MessageEmbed.js");
 const filterLevels = {
     DISABLED: "Off",
     MEMBERS_WITHOUT_ROLES: "No Role",
