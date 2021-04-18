@@ -4,13 +4,15 @@
   "description": "Robigan's discord bot",
   "main": "index.js",
   "dependencies": {
+    "amqp": "^0.2.7",
     "cloudstorm": "git+https://github.com/AmandaDiscord/CloudStorm.git",
-    "glob-promise": "^3.4.0",
-    "ms": "^2.1.2",
+    "glob-promise": "^4.1.0",
+    "ms": "^2.1.3",
+    "raincache": "git+https://github.com/AmandaDiscord/RainCache.git",
     "snowtransfer": "git+https://github.com/AmandaDiscord/SnowTransfer.git"
   },
   "devDependencies": {
-    "eslint": "^7.13.0"
+    "eslint": "^7.24.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

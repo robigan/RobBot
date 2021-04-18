@@ -1,5 +1,5 @@
 // JavaScript source code
-const RobiClient = require("./Structures/RobiClient.js");
+const RobiClient = require("./Code/Structures/RobiClient.js");
 const SecretConfig = require("./Configs/Secrets.json");
 const Config = require("./Configs/Config.json");
 

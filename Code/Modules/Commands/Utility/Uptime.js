@@ -1,5 +1,5 @@
-const Command = require('../../../Structures/Command.js');
-const ms = require('ms');
+const Command = require("../../../Structures/Command.js");
+const ms = require("ms");
 
 module.exports = class extends Command {
     constructor(...args) {
@@ -11,4 +11,4 @@ module.exports = class extends Command {
             super.report(message.author.username, m.content);
         });
     }
-}
+};
