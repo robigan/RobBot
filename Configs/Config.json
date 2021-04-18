@@ -1,19 +1,8 @@
 {
-    "ownerBot": {
-        "id": "315526915828219906",
-        "ex": true
+    "amqp": {
+        "host": "localhost",
+        "vhost": "/robbot"
     },
-    "prefix": "/",
-    "CloudStorm": {
-        "intents": [
-            "GUILDS",
-            "GUILD_MEMBERS",
-            "GUILD_BANS",
-            "GUILD_EMOJIS",
-            "GUILD_MESSAGES"
-        ]
-    },
-    "SnowTransfer": {},
     "debug": {
         "type": true,
         "data": {

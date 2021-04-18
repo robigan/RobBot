@@ -1,0 +1,11 @@
+{
+    "CloudStorm": {
+        "intents": [
+            "GUILDS",
+            "GUILD_MEMBERS",
+            "GUILD_BANS",
+            "GUILD_EMOJIS",
+            "GUILD_MESSAGES"
+        ]
+    }
+}
