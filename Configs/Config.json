@@ -1,7 +1,13 @@
 {
     "amqp": {
-        "host": "localhost",
-        "vhost": "/robbot"
+        "connection": {
+            "host": "localhost",
+            "port": 5672,
+            "user": "guest",
+            "pass": "guest"
+        },
+        "queueGatewayCache": "RobBotGatewayCache",
+        "queueCacheCode": "RobBotCacheCode"
     },
     "debug": {
         "type": true,
