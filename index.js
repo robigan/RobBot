@@ -2,9 +2,10 @@
 //const Code = require("./Code.js");
 const Gateway = require("./Gateway.js");
 
-const Start = async (Funct) => {
-    Funct();
-};
+const AmqpClient = new (require("./amqp/AmqpClient.js"))(require("./Configs/Config.json").amqp);
 
-//Start(Code);
-Start(Gateway);
+(async () => {
+    await AmqpClient.start();
+    //Start(Code);
+    Gateway(undefined, AmqpClient);
+})().catch(console.error);

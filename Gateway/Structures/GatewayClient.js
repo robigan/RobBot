@@ -10,12 +10,18 @@ module.exports = class GatewayClient extends CloudStorm {
      * Initiate the gateway service for RobBot
      * @constructor
      * @param {object} Config
-     * @param {import("../../amqp/AmqpClient")} AmqpClient 
+     * @param {import("../../amqp/AmqpClient")} AmqpClient
      */
     constructor(Config, AmqpClient) {
         super(Config.token, Config.CloudStorm);
-        const Channel = AmqpClient.initQueue(Config.amqp.queueGatewayCache);
-        Channel.sendToQueue(Config.amqp.queueGatewayCache, new Buffer("Hello World"));
+        this.Config = Config;
+        this.Interface = this.Config.amqp.queueGatewayCache;
+        this.AmqpClient = AmqpClient;
         //this.AmqpConnection.on("error", async (e) => console.error(e));
+    }
+
+    async start() {
+        this.Channel = await this.AmqpClient.initQueue(this.Interface);
+        this.Channel.sendToQueue(this.Interface, Buffer.from("Hello World"));
     }
 };

@@ -15,6 +15,6 @@ const GatewayClientConfig = require("./Configs/GatewayClient.json");
  */
 module.exports = async (Config = Object.assign(GatewayClientConfig, MainConfig, SecretConfig), AmqpClient) => {
     const Gateway = new GatewayClient(Config, AmqpClient);
-    //Client.start();
+    await Gateway.start();
     return Gateway;
 };
