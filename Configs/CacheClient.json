@@ -1,3 +1,15 @@
 {
-    
+    "RainCache": {
+        "storage": {},
+        "debug": false
+    },
+    "Engines": [
+        {
+            "type": "redis",
+            "engineType": "default",
+            "options": {
+                "host": "localhost"
+            }
+        }
+    ]
 }

@@ -15,7 +15,11 @@ module.exports = class CacheClient extends RainCache {
      * @param {object} Config
      */
     constructor(Config) {
-        super(Config, Inbound, Outbound);
+        Config.Engines.forEach(Unit => {
+            if (!(Unit.type === "redis")) return;
+            Config.RainCache.storage[Unit.engineType] = new RedisStorageEngine(Unit.options);
+        });
+        super(Config.RainCache, Inbound, Outbound);
     }
 
     async start() {
