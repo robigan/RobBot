@@ -31,7 +31,7 @@ module.exports = class GatewayClient extends CloudStorm {
      * @function
      */
     async start() {
-        this.Channel = await this.AmqpClient.initQueue(this.Interface, { durable: false });
+        this.Channel = await this.AmqpClient.initQueue(this.Interface);
         //this.Channel.sendToQueue(this.Interface, Buffer.from("Hello World"));
         super.connect();
 

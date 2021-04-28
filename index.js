@@ -7,6 +7,7 @@ const AmqpClient = new (require("./amqp/AmqpClient.js"))(require("./Configs/Conf
 
 (async () => {
     await AmqpClient.start();
+    //Code();
     Cache();
     Gateway(undefined, AmqpClient);
 })().catch(console.error);

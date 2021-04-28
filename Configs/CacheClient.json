@@ -1,7 +1,7 @@
 {
     "RainCache": {
         "storage": {},
-        "debug": false
+        "debug": true
     },
     "Engines": [
         {

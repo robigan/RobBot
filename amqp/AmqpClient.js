@@ -33,7 +33,7 @@ module.exports = class AmqpClient extends amqp.Connection {
      * @param {object} Options 
      * @returns {import("@types/amqplib/index").Channel} Channel
      */
-    async initQueue(Interface, Options) {
+    async initQueue(Interface, Options = { durable: false }) {
         const channel = await super.createChannel(async (ch) => {
             await ch.assertQueue(Interface, Options);
         });
