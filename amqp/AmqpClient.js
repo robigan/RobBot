@@ -39,4 +39,24 @@ module.exports = class AmqpClient extends amqp.Connection {
         });
         return channel;
     }
+
+    /**
+     * Initiate a queue and the consume it
+     * @async
+     * @function
+     * @param {string} Interface 
+     * @param {object} QueueOptions 
+     * @param {function Handler(event, ch) {
+         
+     } Handler 
+     * @param {object} ConsumeOptions 
+     * @returns {import("@types/amqplib/index").Channel} Channel
+     */
+    async initQueueAndConsume(Interface, QueueOptions, Handler, ConsumeOptions) {
+        const channel = await this.initQueue(Interface, QueueOptions);
+        channel.consume(Interface, (event) => {
+            Handler(event, channel);
+        }, ConsumeOptions);
+        return channel;
+    }
 };
