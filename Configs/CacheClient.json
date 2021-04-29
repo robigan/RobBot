@@ -11,5 +11,7 @@
                 "host": "localhost"
             }
         }
-    ]
+    ],
+    "Inbound": null,
+    "Outbound": null
 }

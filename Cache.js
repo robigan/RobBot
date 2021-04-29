@@ -15,6 +15,7 @@ const CacheClientConfig = require("./Configs/CacheClient.json");
 module.exports = async (Config = Object.assign(CacheClientConfig, MainConfig, SecretConfig)/*, AmqpClient = new (require("./amqp/AmqpClient.js"))(MainConfig.amqp)/*, LocResProvided = require("./LocationResolver.js")*/) => {
     //global.LocRes = LocResProvided;
     const Cache = new CacheClient(Config/*, AmqpClient*/);
-    await Cache.start();
+    Cache.start();
+    Config.debug.init ? console.log("Cache   : started") : undefined;
     return Cache;
 };

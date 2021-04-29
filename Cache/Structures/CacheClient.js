@@ -15,18 +15,34 @@ module.exports = class CacheClient extends RainCache {
         Config.Engines.forEach(Unit => {
             if (!(Unit.type === "redis")) return;
             Config.RainCache.storage[Unit.engineType] = new RedisStorageEngine(Unit.options);
-        });
-        const Inbound = new AmqpConnector(Config.InboundConnector);
-        const Outbound = new AmqpConnector(Object.assign({}.amqpUrl = Config.OutboundConnector, {}.sendQueue = Config.amqp.queueCacheCode, {}.amqpQueue = Config.amqp.queueGatewayCache));
+        }); // Create module system and use formatting modules from there
+
+        /**
+         * Format the config used for amqp into a suitable one used by RainCache's AmqpConnector
+         * @param {string | object} amqp
+         * @param {string} queueGatewayCache
+         * @param {string} queueCacheCode
+         * @returns {object} AmqpConnector options payload
+         */
+        const Format = (amqp, queueGatewayCache, queueCacheCode) => {
+            const Formatted = {};
+            Formatted.amqpUrl = amqp;
+            Formatted.amqpQueue = queueGatewayCache;
+            Formatted.sendQueue = queueCacheCode;
+        }; // Create module system and use formatting modules from there
+
+        const Inbound = new AmqpConnector(Config.Inbound ?? Format(Config.amqp.connection, Config.amqp.queueGatewayCache, Config.amqp.queueGatewayCache));
+        const Outbound = new AmqpConnector(Config.Outbound ?? Format(Config.amqp.connection, Config.amqp.queueGatewayCache, Config.amqp.queueGatewayCache));
         super(Config.RainCache, Inbound, Outbound);
+        super.on("debug", console.log);
         this.Inbound = Inbound;
         this.Outbound = Outbound;
     }
 
     async start() {
-        //await this.Inbound.initialize();
-        //await this.Outbound.initialize();
+        await this.Inbound.initialize();
+        await this.Outbound.initialize();
         await super.initialize();
-        console.log("Cache initialized");
+        console.log("Cache   : initialized");
     }
 };

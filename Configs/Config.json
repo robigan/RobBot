@@ -10,10 +10,12 @@
         "queueCacheCode": "RobBotCacheCode"
     },
     "debug": {
-        "type": true,
-        "data": {
-            "READY": false,
-            "MESSAGE_CREATE": true
+        "events": {
+            "type": true,
+            "data": {
+                "READY": false,
+                "MESSAGE_CREATE": true
+            }
         },
         "command": true,
         "init": true

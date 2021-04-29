@@ -21,8 +21,8 @@ module.exports = class RobiClient extends SnowTransfer {
         });
 
         this.CloudStorm.on("dispatch", async (event) => {
-            this.debug.type ? console.log(`Event received, type ${event.t}`) : undefined;
-            this.debug.data && this.debug.data[event.t] ? console.log("data", event.d) : undefined;
+            this.debug.events.type ? console.log(`Event received, type ${event.t}`) : undefined;
+            this.debug.events.data && this.debug.events.data[event.t] ? console.log("data", event.d) : undefined;
             if (event.t && this.eventHandlers.get((event.t).toLowerCase())) {
                 (this.eventHandlers.get((event.t).toLowerCase())).run(event, event.d).catch(console.error);
             }
