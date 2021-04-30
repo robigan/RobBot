@@ -1,13 +1,10 @@
 const RainCache = require("raincache");
-// Load the Amqp Connector
 const CustomConnector = require("./CustomConnector.js");
-// Load the redis storage engine class
 const RedisStorageEngine = RainCache.Engines.RedisStorageEngine;
-// Create a new uninitialized RainCache instance, set redis as the default storage engine,
-// disable debugging mode and pass an inbound and an outbound connector to receive and forward events
 
 module.exports = class CacheClient extends RainCache {
     /**
+     * Initiate the caching service for RobBot
      * @constructor
      * @param {object} Config
      */
@@ -23,6 +20,11 @@ module.exports = class CacheClient extends RainCache {
         this.Connector = Connector;
     }
 
+    /**
+     * Start function
+     * @async
+     * @function
+     */
     async start() {
         await this.Connector.initialize();
         await super.initialize();

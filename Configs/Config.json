@@ -7,7 +7,8 @@
             "pass": "guest"
         },
         "queueGatewayCache": "RobBotGatewayCache",
-        "queueCacheCode": "RobBotCacheCode"
+        "queueCacheCode": "RobBotCacheCode",
+        "queueCodeGateway": "RobBotCodeGateway"
     },
     "debug": {
         "events": {

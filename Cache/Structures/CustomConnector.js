@@ -14,6 +14,11 @@ module.exports = class CustomConnector extends BaseConnector {
         this.ready = false;
     }
 
+    /**
+     * Initialize channels and Connector capabilities
+     * @async
+     * @function
+     */
     async initialize() {
         this.channel = await this.client.initQueue(this.options.queueCacheCode);
         await this.client.initQueueAndConsume(this.options.queueGatewayCache, undefined, async (event, ch) => {
@@ -23,6 +28,10 @@ module.exports = class CustomConnector extends BaseConnector {
         this.ready = true;
     }
 
+    /**
+     * Used internally by RainCache to send stuff to the amqp queue
+     * @param {object} event 
+     */
     async send(event) {
         this.channel.sendToQueue(this.options.queueCacheCode, Buffer.from(JSON.stringify(event)));
     }
