@@ -8,12 +8,12 @@ const MainConfig = require("./Configs/Config.json");
 const RobiClientConfig = require("./Configs/RobiClient.json");
 
 /**
- * 
+ *
  * @param {object} Config
- * @param {import("./amqp/AmqpClient")} AmqpClient 
- * @returns {*} RobiClient
+ * @param {import("./amqp/AmqpClient")} AmqpClient
+ * @returns {import("./Code/Structures/RobiClient")} RobiClient
  */
-module.exports = async (Config = Object.assign(RobiClientConfig, MainConfig, SecretConfig), AmqpClient) => {
+module.exports = async (Config = Object.assign(RobiClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("./amqp/AmqpClient.js"))(MainConfig.amqp)) => {
     const Code = new RobiClient(Config, AmqpClient);
     await Code.start();
     return Code;
