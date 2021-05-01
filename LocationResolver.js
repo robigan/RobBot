@@ -19,7 +19,7 @@ module.exports = class LocRes {
      * @returns {string} Process cwd
      */
     get indexDir() {
-        return PathM.dirname(process.cwd());
+        return process.cwd();
     }
 
     /**

@@ -17,7 +17,7 @@ module.exports = class extends EventHandler {
 
         //To patch running multiple commands
         const command = this.client.commands.get(cmd.toLowerCase()) || this.client.commands.get(this.client.aliases.get(cmd.toLowerCase()));
-        this.client.debug.command ? console.log(`Frontend Command: ${cmd} Args: ${args}\nBackend Command:`, command) : undefined;
+        this.client.debug.command ? console.log(`Frontend Command: ${cmd} Args: ${args}\nBackend Command:`, command.name) : undefined;
         if (command) {
             /*message.guild.fetch().catch(err => {
                 console.error(err);
@@ -25,7 +25,7 @@ module.exports = class extends EventHandler {
             });*/
             command.run(message, args).catch(err => {
                 console.error(err);
-                message.reply(`Error when running command, ${err}`);
+                this.client.channel.createMessage(message.channel_id, `<@${message.author.id}> Error when running command, ${err}`);
             });
         }
     }

@@ -15,7 +15,7 @@ module.exports = class Util {
 
     async loadCommands() {
         console.warn("Code    : Remember, only load commands you trust");
-        return LocRes.glob(LocRes.redirect("/Modules/Commands/**/*.js")).then((commands) => {
+        LocRes.glob(LocRes.redirect("/Code/Modules/Commands/**/*.js")).then((commands) => {
             for (const commandFile of commands) {
                 delete require.cache[commandFile];
                 const { name } = Path.parse(commandFile);
@@ -37,7 +37,7 @@ module.exports = class Util {
 
     async loadEventHandlers() {
         console.warn("Code    : Remember, only load EventHandlers you trust");
-        return LocRes.glob(LocRes.redirect("/Modules/EventHandlers/**/*.js")).then((eventHandlers) => {
+        LocRes.glob(LocRes.redirect("/Code/Modules/EventHandlers/**/*.js")).then((eventHandlers) => {
             for (const eventFile of eventHandlers) {
                 delete require.cache[eventFile];
                 const { name } = Path.parse(eventFile);
