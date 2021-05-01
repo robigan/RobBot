@@ -9,14 +9,13 @@ module.exports = class extends Command {
     async run(message) {
         const Gay = Math.floor(Math.random() * 100);
         const embed = new MessageEmbed()
-            .setAuthor(message.author.tag)
+            .setAuthor(`${message.author.username}#${message.author.discriminator}`)
             .setColor("LUMINOUS_VIVID_PINK")
             .setTitle("Gayometer")
             .setDescription("Measures how much gay you are")
             .addField("Gay Level", `You are ${Gay}% gay`)
             .setTimestamp();
-        message.channel.send(embed).then(() => {
-            super.report(message.author.username, `You are ${Gay}% gay`);
-        });
+        await this.client.channel.createMessage(message.channel_id, {embed: embed.toJSON()});
+        super.report(message.author.username, `You are ${Gay}% gay`);
     }
 };

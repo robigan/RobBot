@@ -10,12 +10,11 @@ module.exports = class extends Command {
 
     async run(message) {
         if (this.config.ownerBot.id && message.author.id === this.config.ownerBot.id) {
-            message.channel.send("Shutting down now!").then(() => {
-                console.log(`Process killed by ${message.author.username}`);
-                process.exit();
-            });
+            await this.client.channel.createMessage(message.channel_id, "Shutting down now!");
+            console.log(`Process killed by ${message.author.username}`);
+            process.exit(); // Have to update to send process.exit() event to the other systems...
         } else {
-            message.channel.send("An error was encountered");
+            this.client.channel.createMessage(message.channel_id, "An error was encountered");
         }
         super.report(message.author.username, "error?");
     }

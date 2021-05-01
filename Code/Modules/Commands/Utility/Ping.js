@@ -8,10 +8,9 @@ module.exports = class extends Command {
     }
 
     async run(message) {
-        message.channel.send("Measuring...").then(msg => {
-            msg.edit(`Pong! Round Trip message latency is ${msg.createdTimestamp - message.createdTimestamp}ms, API latency is ${this.client.ws.ping}ms`).then(m => {
-                super.report(message.author.username, m.content);
-            });
+        const msg = await this.client.channel.createMessage(message.channel_id, "Measuring...");
+        this.client.channel.editMessage(msg.channel_id, msg.id, `Pong! Round Trip message latency is ${Date.parse(msg.timestamp) - Date.parse(message.timestamp)}ms`).then(async m => {
+            super.report(message.author.username, m.content);
         });
         //Yea yea am aware abt callback chaos
     }

@@ -1,4 +1,5 @@
 const SnowTransfer = require("snowtransfer");
+const RainCache = require("raincache");
 const Util = require("./Util.js");
 
 module.exports = class RobiClient extends SnowTransfer {
@@ -10,10 +11,25 @@ module.exports = class RobiClient extends SnowTransfer {
      */
     constructor(config = {}, AmqpClient) {
         super(config.token, config.SnowTransfer);
-
         this.validate(config);
+
         this.AmqpClient = AmqpClient;
         this.Events = new (require("events").EventEmitter)();
+    
+        const RainCacheConfig = require("../../Configs/CacheClient.json");
+        RainCacheConfig.Engines.forEach(Unit => {
+            if (!(Unit.type === "redis")) return;
+            RainCacheConfig.RainCache.storage[Unit.engineType] = new RainCache.Engines.RedisStorageEngine(Unit.options);
+        });
+        this.RainCache = new RainCache({
+            storage: {
+                default: new RainCache.Engines.RedisStorageEngine({
+                    redisOptions: {
+                        host: "localhost"
+                    }
+                })
+            }, debug: false
+        }, null, null);
 
         this.commands = new Map();
         this.aliases = new Map();
@@ -66,6 +82,8 @@ module.exports = class RobiClient extends SnowTransfer {
      * @function
      */
     async start() {
+        await this.RainCache.initialize();
+        this.Cache = this.RainCache.cache; // To try the other position
         console.log("Code    : Starting register process of command handlers");
         await this.utils.loadCommands().catch((err) => {
             console.error(err);

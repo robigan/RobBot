@@ -7,8 +7,6 @@ module.exports = class extends Command {
     }
 
     async run(message) {
-        message.channel.send(`Uptime is ${ms(this.client.uptime, { long: true })} and process uptime is ${process.uptime()}s`).then(m => {
-            super.report(message.author.username, m.content);
-        });
+        this.client.channel.createMessage(message.channel_id, `Process Uptime is ${ms(process.uptime(), { long: true })}`).then(async msg => super.report(message.author.username, msg.content));
     }
 };

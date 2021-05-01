@@ -12,10 +12,10 @@
     },
     "debug": {
         "events": {
-            "type": true,
+            "type": false,
             "data": {
                 "READY": false,
-                "MESSAGE_CREATE": true
+                "MESSAGE_CREATE": false
             }
         },
         "command": true,
