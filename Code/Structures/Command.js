@@ -1,4 +1,12 @@
 module.exports = class Command {
+    /**
+     * Base class for commands
+     * @constructor
+     * @param {import("./RobiClient")} client 
+     * @param {string} name 
+     * @param {object} options 
+     * @param {object} flags 
+     */
     constructor(client, name, options = {}, flags = {}) {
         this.client = client;
         this.name = name;
@@ -9,8 +17,14 @@ module.exports = class Command {
         this.flags = flags;
     }
 
-    // eslint-disable-next-line no-unused-vars
-    async run(message, args) {
+    /**
+     * Run command
+     * @async
+     * @function
+     * @param {Object} Message
+     * @param {...string} Args
+     */
+    async run() {
         console.log(`Command ${this.name} doesn't provide a run method`);
     }
 

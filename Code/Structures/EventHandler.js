@@ -1,4 +1,12 @@
 module.exports = class EventHandler {
+    /**
+     * Base class for event handlers
+     * @constructor
+     * @param {import("./RobiClient")} client 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {object} flags 
+     */
     constructor(client, name, description, flags = {}) {
         this.client = client;
         this.name = name;
@@ -6,6 +14,13 @@ module.exports = class EventHandler {
         this.flags = flags;
     }
 
+    /**
+     * Run event handler
+     * @async
+     * @function
+     * @param {{op: 0, d: Object, s: number, t: string}} Event
+     * @param {Object} Event data
+     */
     async run(event, data) {
         console.log(`Event ${this.name} doesn't provide a run method, event type: ${event.t}`);
         console.log("And the Data:", data);
