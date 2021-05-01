@@ -9,6 +9,11 @@ module.exports = class extends EventHandler {
         const mentionRegex = RegExp(`^<@!${this.client.user.id}>$`);
         const mentionRegexPrefix = RegExp(`^<@!${this.client.user.id}> `);
 
+        if ((await this.client.Cache.user.isIndexed(message.author.id)) ?? true ) {
+            const user = await this.client.user.getUser(message.author.id);
+            await this.client.Cache.user.addToIndex(message.author.id);
+            await this.client.Cache.user.update(message.author.id, user);
+        }
         if (!message.guild_id || (await this.client.Cache.user.get(message.author.id)).bot === true) return;
 
         if (message.content.match(mentionRegex)) message.reply(`My prefix for this guild is \`${this.prefix}\` :D`);

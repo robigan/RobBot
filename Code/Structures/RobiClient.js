@@ -1,5 +1,6 @@
 const SnowTransfer = require("snowtransfer");
 const RainCache = require("raincache");
+const MongoDB = require("mongodb");
 const Util = require("./Util.js");
 
 module.exports = class RobiClient extends SnowTransfer {
