@@ -1,6 +1,6 @@
 const SnowTransfer = require("snowtransfer");
 const RainCache = require("raincache");
-const MongoDB = require("mongodb");
+//const MongoDB = require("mongodb");
 const Util = require("./Util.js");
 
 module.exports = class RobiClient extends SnowTransfer {
@@ -16,6 +16,12 @@ module.exports = class RobiClient extends SnowTransfer {
 
         this.AmqpClient = AmqpClient;
         this.Events = new (require("events").EventEmitter)();
+
+        this.identifiers = {
+            "ownerBot": config.ownerbot,
+            "token": config.token,
+            "selfID": ""
+        };
     
         const RainCacheConfig = require("../../Configs/CacheClient.json");
         RainCacheConfig.Engines.forEach(Unit => {
@@ -32,6 +38,7 @@ module.exports = class RobiClient extends SnowTransfer {
             }, debug: false
         }, null, null);
 
+        this.Modules = {};
         this.commands = new Map();
         this.aliases = new Map();
         this.eventHandlers = new Map();
@@ -62,7 +69,6 @@ module.exports = class RobiClient extends SnowTransfer {
         if (typeof config !== "object") throw new TypeError("Config and should be a type of Object");
 
         if (!config.token) throw new Error("You must pass the token for the client");
-        this.token = config.token;
 
         if (!config.prefix) throw new Error("You must pass a prefix for the client");
         if (typeof config.prefix !== "string") throw new TypeError("Prefix should be a type of String");
@@ -85,6 +91,7 @@ module.exports = class RobiClient extends SnowTransfer {
     async start() {
         await this.RainCache.initialize();
         this.Cache = this.RainCache.cache; // To try the other position
+        //(await this.Cache.user.get("self")).id; // To get instead during ready event
         console.log("Code    : Starting register process of command handlers");
         await this.utils.loadCommands().catch((err) => {
             console.error(err);

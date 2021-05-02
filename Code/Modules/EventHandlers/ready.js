@@ -6,8 +6,7 @@ module.exports = class extends EventHandler {
     }
 
     async run(event, data) {
-        this.client.user = data.user;
-        this.client.guilds = data.guilds;
-        //this.shard = data.shard ?? null;
+        this.client.identifiers.selfID = data.user.id;
+        console.log("Code    : Received ready event");
     }
 };

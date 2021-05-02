@@ -6,17 +6,21 @@ module.exports = class extends EventHandler {
     }
 
     async run(event, message) {
-        const mentionRegex = RegExp(`^<@!${this.client.user.id}>$`);
-        const mentionRegexPrefix = RegExp(`^<@!${this.client.user.id}> `);
+        const mentionRegex = RegExp(`^<@!${this.client.identifiers.selfID}>$`);
+        const mentionRegexPrefix = RegExp(`^<@!${this.client.identifiers.selfID}> `);
 
         if ((await this.client.Cache.user.isIndexed(message.author.id)) ?? true ) {
-            const user = await this.client.user.getUser(message.author.id);
-            await this.client.Cache.user.addToIndex(message.author.id);
-            await this.client.Cache.user.update(message.author.id, user);
+            try {
+                const user = await this.client.user.getUser(message.author.id);
+                await this.client.Cache.user.addToIndex(message.author.id);
+                await this.client.Cache.user.update(message.author.id, user);
+            } catch (err) {
+                console.error("Error attempting to update user cache", err);
+            }
         }
         if (!message.guild_id || (await this.client.Cache.user.get(message.author.id)).bot === true) return;
 
-        if (message.content.match(mentionRegex)) message.reply(`My prefix for this guild is \`${this.prefix}\` :D`);
+        if (message.content.match(mentionRegex)) this.client.channel.createMessage(message.channel_id, `My prefix for this guild is \`${this.client.prefix}\` :D`);
         const prefix = message.content.match(mentionRegexPrefix) ? message.content.match(mentionRegexPrefix)[0] : this.client.prefix;
         const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
 
