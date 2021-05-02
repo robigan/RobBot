@@ -2,10 +2,10 @@
  * RobiClient wrapper. Makes initiating the RobiClient easier
  */
 
-const RobiClient = require("./Code/Structures/RobiClient.js");
-const SecretConfig = require("./Configs/Secrets.json");
-const MainConfig = require("./Configs/Config.json");
-const RobiClientConfig = require("./Configs/RobiClient.json");
+const RobiClient = require("../Code/Structures/RobiClient.js");
+const SecretConfig = require("../Configs/Secrets.json");
+const MainConfig = require("../Configs/Config.json");
+const RobiClientConfig = require("../Configs/RobiClient.json");
 
 /**
  *

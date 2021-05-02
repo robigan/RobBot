@@ -2,10 +2,10 @@
  * GatewayClient wrapper. Makes initiating the GatewayClient easier
  */
 
-const GatewayClient = require("./Gateway/GatewayClient.js");
-const SecretConfig = require("./Configs/Secrets.json");
-const MainConfig = require("./Configs/Config.json");
-const GatewayClientConfig = require("./Configs/GatewayClient.json");
+const GatewayClient = require("../Gateway/GatewayClient.js");
+const SecretConfig = require("../Configs/Secrets.json");
+const MainConfig = require("../Configs/Config.json");
+const GatewayClientConfig = require("../Configs/GatewayClient.json");
 
 /**
  * Wrapper function for initiating GatewayClient
