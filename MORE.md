@@ -8,3 +8,4 @@
 - Upgrade from github/source. For each "system" (Gateway, Cache, Code), spawn a new process that will wait for the parent to die and then re-call the new process. But for now a simple process.exit() should do.
 - Auto requeuing for errors
 - Move a couple of properties to new namespaces
+- Make certain folders check for extra code (eg. Sudoers folder)

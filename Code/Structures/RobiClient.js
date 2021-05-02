@@ -20,7 +20,8 @@ module.exports = class RobiClient extends SnowTransfer {
         this.identifiers = {
             "ownerBot": config.ownerbot,
             "token": config.token,
-            "selfID": ""
+            "selfID": "",
+            "prefix": config.prefix
         };
     
         const RainCacheConfig = require("../../Configs/CacheClient.json");
@@ -38,10 +39,11 @@ module.exports = class RobiClient extends SnowTransfer {
             }, debug: false
         }, null, null);
 
-        this.Modules = {};
-        this.commands = new Map();
-        this.aliases = new Map();
-        this.eventHandlers = new Map();
+        this.Modules = {
+            commands: new Map(),
+            aliases: new Map(),
+            eventHandlers: new Map(),
+        };
         this.utils = new Util(this);
 
         console.log("Code    : Starting register process of event handlers");
@@ -54,8 +56,8 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Events.on("dispatch", async (event) => {
             this.debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
             this.debug.events.data && this.debug.events.data[event.t] ? console.log("data", event.d) : undefined;
-            if (event.t && this.eventHandlers.get((event.t).toLowerCase())) {
-                (this.eventHandlers.get((event.t).toLowerCase())).run(event, event.d).catch(console.error);
+            if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
+                (this.Modules.eventHandlers.get((event.t).toLowerCase())).run(event, event.d).catch(console.error);
             }
         });
     }
@@ -72,7 +74,6 @@ module.exports = class RobiClient extends SnowTransfer {
 
         if (!config.prefix) throw new Error("You must pass a prefix for the client");
         if (typeof config.prefix !== "string") throw new TypeError("Prefix should be a type of String");
-        this.prefix = config.prefix;
 
         if (config.debug) {
             console.warn("Code    : Debug mode enabled...");

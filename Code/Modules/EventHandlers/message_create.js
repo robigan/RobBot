@@ -20,12 +20,12 @@ module.exports = class extends EventHandler {
         }
         if (!message.guild_id || (await this.client.Cache.user.get(message.author.id)).bot === true) return;
 
-        if (message.content.match(mentionRegex)) this.client.channel.createMessage(message.channel_id, `My prefix for this guild is \`${this.client.prefix}\` :D`);
-        const prefix = message.content.match(mentionRegexPrefix) ? message.content.match(mentionRegexPrefix)[0] : this.client.prefix;
+        if (message.content.match(mentionRegex)) this.client.channel.createMessage(message.channel_id, `My prefix for this guild is \`${this.client.identifiers.prefix}\` :D`);
+        const prefix = message.content.match(mentionRegexPrefix) ? message.content.match(mentionRegexPrefix)[0] : this.client.identifiers.prefix;
         const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
 
         //To patch running multiple commands
-        const command = this.client.commands.get(cmd.toLowerCase()) || this.client.commands.get(this.client.aliases.get(cmd.toLowerCase()));
+        const command = this.client.Modules.commands.get(cmd.toLowerCase()) || this.client.Modules.commands.get(this.client.Modules.aliases.get(cmd.toLowerCase()));
         this.client.debug.command && command ? console.log(`Frontend Command: ${cmd} Args: ${args}\nBackend Command:`, command.name) : undefined;
         if (command) {
             command.run(message, args).catch(err => {

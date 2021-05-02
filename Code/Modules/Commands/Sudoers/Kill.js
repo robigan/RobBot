@@ -15,7 +15,7 @@ module.exports = class extends Command {
             process.exit(); // Have to update to send process.exit() event to the other systems...
         } else {
             this.client.channel.createMessage(message.channel_id, "An error was encountered");
+            super.report(message.author.username, "error?");
         }
-        super.report(message.author.username, "error?");
     }
 };
