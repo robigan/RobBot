@@ -13,7 +13,7 @@ module.exports = class extends EventHandler {
      * @param {import("@amanda/discordtypings").ReadyData} data
      */
     async run(event, data) {
-        this.client.identifiers.selfID = data.user.id;
+        this.client.Identify.selfID = data.user.id;
         console.log("Code    : Received ready event");
     }
 };

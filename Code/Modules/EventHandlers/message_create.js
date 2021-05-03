@@ -13,8 +13,8 @@ module.exports = class extends EventHandler {
      * @param {import("@amanda/discordtypings").MessageData} message
      */
     async run(event, message) {
-        const mentionRegex = RegExp(`^<@!${this.client.identifiers.selfID}>$`);
-        const mentionRegexPrefix = RegExp(`^<@!${this.client.identifiers.selfID}> `);
+        const mentionRegex = RegExp(`^<@!${this.client.Identify.selfID}>$`);
+        const mentionRegexPrefix = RegExp(`^<@!${this.client.Identify.selfID}> `);
 
         if (!(await this.client.Cache.user.get(message.author.id))) {
             this.client.debug.cacheUpdate ? console.warn("Code    : Running await cache update for", message.author.username) : undefined;
@@ -28,8 +28,8 @@ module.exports = class extends EventHandler {
         }
         if (!message.guild_id || (await this.client.Cache.user.get(message.author.id)).bot === true) return;
 
-        if (message.content.match(mentionRegex)) this.client.channel.createMessage(message.channel_id, `My prefix for this guild is \`${this.client.identifiers.prefix}\` :D`);
-        const prefix = message.content.match(mentionRegexPrefix) ? message.content.match(mentionRegexPrefix)[0] : this.client.identifiers.prefix;
+        if (message.content.match(mentionRegex)) this.client.channel.createMessage(message.channel_id, `My prefix for this guild is \`${this.client.Identify.prefix}\` :D`);
+        const prefix = message.content.match(mentionRegexPrefix) ? message.content.match(mentionRegexPrefix)[0] : this.client.Identify.prefix;
         const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g);
 
         //To patch running multiple commands

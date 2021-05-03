@@ -71,6 +71,10 @@ module.exports = class Util {
         });
     }
 
+    async makeGatewayRequest(content) {
+        this.client.Modules.channel.sendToQueue(this.client.config.amqp.queueCodeGateway, content);
+    }
+
     /**
      * Format an array to be cut off after maxLen, useful for formatting roles
      * @function

@@ -16,7 +16,7 @@ module.exports = class RobiClient extends SnowTransfer {
 
         this.AmqpClient = AmqpClient;
 
-        this.identifiers = {
+        this.Identify = {
             "ownerBot": config.ownerbot,
             "token": config.token,
             "selfID": "",
@@ -42,6 +42,7 @@ module.exports = class RobiClient extends SnowTransfer {
             commands: new Map(),
             aliases: new Map(),
             eventHandlers: new Map(),
+            channel: null,
         };
         this.utils = new Util(this);
 
@@ -90,6 +91,7 @@ module.exports = class RobiClient extends SnowTransfer {
             console.log("Code    : Register process of command handlers complete");
         });
         this.AmqpClient.initQueueAndConsume(this.config.amqp.queueCacheCode, undefined, async (event, ch) => {
+
             const ParsedEvent = JSON.parse(event.content.toString());
             // I believe this code is more efficient simply due to the fact that it should use less ram, doesn't have to go through Events and messages can be requeued
             const Dispatch = async (event) => {
@@ -107,6 +109,8 @@ module.exports = class RobiClient extends SnowTransfer {
                 return;
             });
             ch.ack(event);
+        }).then(async ch => {
+            this.Modules.channel = ch.assertQueue(this.config.amqp.queueCodeGateway);
         });
     }
 };
