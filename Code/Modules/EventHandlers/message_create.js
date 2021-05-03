@@ -5,6 +5,13 @@ module.exports = class extends EventHandler {
         super(...args, "Default message event handler");
     }
 
+    /**
+     * Run message_create event handler
+     * @async
+     * @function
+     * @param {import("cloudstorm/dist/Types").IWSMessage} event
+     * @param {import("@amanda/discordtypings").MessageData} message
+     */
     async run(event, message) {
         const mentionRegex = RegExp(`^<@!${this.client.identifiers.selfID}>$`);
         const mentionRegexPrefix = RegExp(`^<@!${this.client.identifiers.selfID}> `);

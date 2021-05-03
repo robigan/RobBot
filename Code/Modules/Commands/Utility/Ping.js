@@ -16,6 +16,13 @@ module.exports = class extends Command {
         });
     }
 
+    /**
+     * Run ping command
+     * @async
+     * @function
+     * @param {import("@amanda/discordtypings").MessageData} message
+     * @param {...string} args
+     */
     async run(message, args) {
         if (args.some(arg => arg === "--multi-test")) {
             this.createPing(message);
@@ -29,6 +36,11 @@ module.exports = class extends Command {
         //Yea yea am aware abt callback chaos
     }
 
+    /**
+     * @async
+     * @function
+     * @param {import("@amanda/discordtypings").MessageData} message
+     */
     async createPing(message) {
         const msg = await this.client.channel.createMessage(message.channel_id, "Measuring...");
         await this.client.channel.editMessage(msg.channel_id, msg.id, `Pong! Round Trip message latency is ${Date.parse(msg.timestamp) - Date.parse(message.timestamp)}ms`);

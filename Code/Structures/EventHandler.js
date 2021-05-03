@@ -1,3 +1,7 @@
+/**
+ * Base class for EventHandlers
+ */
+
 module.exports = class EventHandler {
     /**
      * Base class for event handlers
@@ -18,8 +22,8 @@ module.exports = class EventHandler {
      * Run event handler
      * @async
      * @function
-     * @param {{op: 0, d: Object, s: number, t: string}} Event
-     * @param {Object} Event data
+     * @param {import("cloudstorm/dist/Types").IWSMessage} event
+     * @param {*} data
      */
     async run(event, data) {
         console.log(`Event ${this.name} doesn't provide a run method, event type: ${event.t}`);

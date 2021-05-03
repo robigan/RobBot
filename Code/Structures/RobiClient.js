@@ -7,7 +7,7 @@ module.exports = class RobiClient extends SnowTransfer {
     /**
      * Initiate the RobiClient for RobBot
      * @constructor
-     * @param {object} config 
+     * @param {Object} config 
      * @param {import("../../amqp/AmqpClient")} AmqpClient 
      */
     constructor(config = {}, AmqpClient) {
@@ -56,7 +56,7 @@ module.exports = class RobiClient extends SnowTransfer {
     /**
      * Validates that the provided config is valid cus yes
      * @function
-     * @param {object} config 
+     * @param {Object} config 
      */
     validate(config) {
         if (typeof config !== "object") throw new TypeError("Config and should be a type of Object");

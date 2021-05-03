@@ -4,15 +4,30 @@ const EventHandler = require("./EventHandler.js");
 const LocRes = new (require("../../LocationResolver.js"));
 
 module.exports = class Util {
+    /**
+     * Constructor for utils
+     * @constructor
+     * @param {import("./RobiClient")} client 
+     */
     constructor(client) {
         this.client = client;
     }
 
+    /**
+     * Checks if input is a class
+     * @param {Function} input
+     * @returns {boolean}
+     */
     isClass(input) {
         return typeof input === "function" && typeof input.prototype === "object" &&
         input.toString().substring(0, 5) === "class";
     }
 
+    /**
+     * Load Commands
+     * @async
+     * @function
+     */
     async loadCommands() {
         console.warn("Code    : Remember, only load commands you trust");
         LocRes.glob(LocRes.redirect("/Code/Modules/Commands/**/*.js")).then((commands) => {
@@ -35,6 +50,11 @@ module.exports = class Util {
         });
     }
 
+    /**
+     * Load Event Handlers
+     * @async
+     * @function
+     */
     async loadEventHandlers() {
         console.warn("Code    : Remember, only load EventHandlers you trust");
         LocRes.glob(LocRes.redirect("/Code/Modules/EventHandlers/**/*.js")).then((eventHandlers) => {
@@ -51,6 +71,14 @@ module.exports = class Util {
         });
     }
 
+    /**
+     * Format an array to be cut off after maxLen, useful for formatting roles
+     * @function
+     * @async
+     * @param {import("@amanda/discordtypings").RoleData[]} arr 
+     * @param {number} maxLen 
+     * @returns {import("@amanda/discordtypings").RoleData[]}
+     */
     async formatRoles(arr, maxLen = 10) {
         if (arr.length > maxLen) {
             const len = arr.length - maxLen;

@@ -8,6 +8,12 @@ module.exports = class extends Command {
         this.config = this.client.config;
     }
 
+    /**
+     * Run reload command
+     * @async
+     * @function
+     * @param {import("@amanda/discordtypings").MessageData} message
+     */
     async run(message) {
         if (this.config.ownerBot.id && message.author.id === this.config.ownerBot.id) {
             this.client.Modules.commands.forEach((value, key) => {

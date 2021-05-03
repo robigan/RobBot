@@ -1,3 +1,9 @@
+/**
+ * Base class for Commands
+ * @typedef {Object} Message
+ * @property {}
+ */
+
 module.exports = class Command {
     /**
      * Base class for commands
@@ -21,13 +27,18 @@ module.exports = class Command {
      * Run command
      * @async
      * @function
-     * @param {Object} Message
-     * @param {...string} Args
+     * @param {import("@amanda/discordtypings").MessageData} message
+     * @param {...string} args
      */
     async run() {
         console.log(`Command ${this.name} doesn't provide a run method`);
     }
 
+    /**
+     * Report command
+     * @param {string} author 
+     * @param {string} action 
+     */
     async report(author, action) {
         console.log(`User ${author} invoked ${this.name}\u000AReplied with ${action}`);
     }

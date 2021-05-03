@@ -6,6 +6,12 @@ module.exports = class extends Command {
         super(...args);
     }
 
+    /**
+     * Run gay command
+     * @async
+     * @function
+     * @param {import("@amanda/discordtypings").MessageData} message
+     */
     async run(message) {
         const Gay = Math.floor(Math.random() * 100);
         const embed = new MessageEmbed()

@@ -8,6 +8,12 @@ module.exports = class extends Command {
         this.config = this.client.config;
     }
 
+    /**
+     * Run kill command
+     * @async
+     * @function
+     * @param {import("@amanda/discordtypings").MessageData} message
+     */
     async run(message) {
         if (this.config.ownerBot.id && message.author.id === this.config.ownerBot.id) {
             await this.client.channel.createMessage(message.channel_id, "Shutting down now!");
