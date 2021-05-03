@@ -9,7 +9,8 @@ module.exports = class extends EventHandler {
         const mentionRegex = RegExp(`^<@!${this.client.identifiers.selfID}>$`);
         const mentionRegexPrefix = RegExp(`^<@!${this.client.identifiers.selfID}> `);
 
-        if ((await this.client.Cache.user.isIndexed(message.author.id)) ?? true ) {
+        if (!(await this.client.Cache.user.get(message.author.id))) {
+            this.client.debug.cacheUpdate ? console.warn("Code    : Running await cache update for", message.author.username) : undefined;
             try {
                 const user = await this.client.user.getUser(message.author.id);
                 await this.client.Cache.user.addToIndex(message.author.id);

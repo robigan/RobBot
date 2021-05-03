@@ -15,7 +15,6 @@ module.exports = class RobiClient extends SnowTransfer {
         this.validate(config);
 
         this.AmqpClient = AmqpClient;
-        this.Events = new (require("events").EventEmitter)();
 
         this.identifiers = {
             "ownerBot": config.ownerbot,
@@ -23,7 +22,7 @@ module.exports = class RobiClient extends SnowTransfer {
             "selfID": "",
             "prefix": config.prefix
         };
-    
+
         const RainCacheConfig = require("../../Configs/CacheClient.json");
         RainCacheConfig.Engines.forEach(Unit => {
             if (!(Unit.type === "redis")) return;
@@ -51,14 +50,6 @@ module.exports = class RobiClient extends SnowTransfer {
             console.error(err);
         }).finally(() => {
             console.log("Code    : Register process of event handlers complete");
-        });
-
-        this.Events.on("dispatch", async (event) => {
-            this.debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
-            this.debug.events.data && this.debug.events.data[event.t] ? console.log("data", event.d) : undefined;
-            if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
-                (this.Modules.eventHandlers.get((event.t).toLowerCase())).run(event, event.d).catch(console.error);
-            }
         });
     }
 
@@ -92,7 +83,6 @@ module.exports = class RobiClient extends SnowTransfer {
     async start() {
         await this.RainCache.initialize();
         this.Cache = this.RainCache.cache; // To try the other position
-        //(await this.Cache.user.get("self")).id; // To get instead during ready event
         console.log("Code    : Starting register process of command handlers");
         await this.utils.loadCommands().catch((err) => {
             console.error(err);
@@ -101,9 +91,21 @@ module.exports = class RobiClient extends SnowTransfer {
         });
         this.AmqpClient.initQueueAndConsume(this.config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());
-            if (ParsedEvent.op === 0) this.Events.emit("dispatch", ParsedEvent);
-            else if (ParsedEvent.op === 4) this.Events.emit("voiceStateUpdate", ParsedEvent);
-            else this.Events.emit("event", ParsedEvent);
+            // I believe this code is more efficient simply due to the fact that it should use less ram, doesn't have to go through Events and messages can be requeued
+            const Dispatch = async (event) => {
+                this.debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
+                this.debug.events.data && this.debug.events.data[event.t] ? console.log("data", event.d) : undefined;
+                if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
+                    (this.Modules.eventHandlers.get((event.t).toLowerCase())).run(event, event.d).catch(console.error);
+                }
+            };
+
+            this.debug.opCodes ? console.warn(`Code    : Received op code ${ParsedEvent.op}`) : undefined;
+            Dispatch(ParsedEvent).catch(err => {
+                console.error(err);
+                ch.nack(event, false, true);
+                return;
+            });
             ch.ack(event);
         });
     }

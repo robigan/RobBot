@@ -18,6 +18,8 @@
                 "MESSAGE_CREATE": false
             }
         },
+        "cacheUpdate": true,
+        "opCodes": true,
         "command": true,
         "init": true
     }
