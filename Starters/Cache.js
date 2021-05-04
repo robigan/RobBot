@@ -2,7 +2,7 @@
  * CacheClient wrapper. Makes initiating the CacheClient, and connecting to redis easier
  */
 
-const CacheClient = require("../Cache/Structures/CacheClient.js");
+const CacheClient = require("../src/Cache/Structures/CacheClient.js");
 const SecretConfig = require("../Configs/Secrets.json");
 const MainConfig = require("../Configs/Config.json");
 const CacheClientConfig = require("../Configs/CacheClient.json");
@@ -10,8 +10,8 @@ const CacheClientConfig = require("../Configs/CacheClient.json");
 /**
  * Wrapper function for initiating CacheClient
  * @param {object} Config
- * @param {import("./amqp/AmqpClient")} AmqpClient
- * @returns {import("../Cache/Structures/CacheClient")} CacheClient
+ * @param {import("../src/amqp/AmqpClient")} AmqpClient
+ * @returns {import("../src/Cache/Structures/CacheClient")} CacheClient
  */
 module.exports = async (Config = Object.assign(CacheClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("../amqp/AmqpClient.js"))(MainConfig.amqp)/*, LocResProvided = require("./LocationResolver.js")*/) => {
     //global.LocRes = LocResProvided;

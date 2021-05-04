@@ -2,7 +2,7 @@
  * GatewayClient wrapper. Makes initiating the GatewayClient easier
  */
 
-const GatewayClient = require("../Gateway/GatewayClient.js");
+const GatewayClient = require("../src/Gateway/GatewayClient.js");
 const SecretConfig = require("../Configs/Secrets.json");
 const MainConfig = require("../Configs/Config.json");
 const GatewayClientConfig = require("../Configs/GatewayClient.json");
@@ -10,8 +10,8 @@ const GatewayClientConfig = require("../Configs/GatewayClient.json");
 /**
  * Wrapper function for initiating GatewayClient
  * @param {object} Config
- * @param {import("./amqp/AmqpClient")} AmqpClient
- * @returns {import("./Gateway/GatewayClient")} GatewayClient
+ * @param {import("../src/amqp/AmqpClient")} AmqpClient
+ * @returns {import("../src/Gateway/GatewayClient")} GatewayClient
  */
 module.exports = async (Config = Object.assign(GatewayClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("./amqp/AmqpClient.js"))(MainConfig.amqp)/*, LocResProvided = require("./LocationResolver.js")*/) => {
     //global.LocRes = LocResProvided;

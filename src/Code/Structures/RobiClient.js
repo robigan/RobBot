@@ -23,7 +23,7 @@ module.exports = class RobiClient extends SnowTransfer {
             "prefix": config.prefix
         };
 
-        const RainCacheConfig = require("../../Configs/CacheClient.json");
+        const RainCacheConfig = require("../../../Configs/CacheClient.json");
         RainCacheConfig.Engines.forEach(Unit => {
             if (!(Unit.type === "redis")) return;
             RainCacheConfig.RainCache.storage[Unit.engineType] = new RainCache.Engines.RedisStorageEngine(Unit.options);
