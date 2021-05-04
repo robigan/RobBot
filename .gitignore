@@ -1,5 +1,5 @@
 **/node_modules
-/Configs/Secrets.json
 **/.vscode
 *.disabled
 *.log
+src/Configs/Secrets.json
