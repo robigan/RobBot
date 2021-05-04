@@ -1,7 +1,7 @@
 const Path = require("path");
 const Command = require("./Command.js");
 const EventHandler = require("./EventHandler.js");
-const LocRes = new (require("../../LocationResolver.js"));
+const LocRes = new (require("../../../LocationResolver.js"));
 
 module.exports = class Util {
     /**
