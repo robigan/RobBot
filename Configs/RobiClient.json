@@ -4,5 +4,13 @@
     },
     "prefix": "/",
     "SnowTransfer": {},
-    "MongoDB": {}
+    "Mongoose": {
+        "connect": {
+            "url": "mongodb://127.0.0.1:27017/RobBot",
+            "options": {
+                "useNewUrlParser": true,
+                "useUnifiedTopology": true
+            }
+        }
+    }
 }
