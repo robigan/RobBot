@@ -13,6 +13,14 @@ const Glob = require("glob-promise");
  */
 module.exports = class LocRes {
     /**
+     * @constructor
+     */
+    constructor() {
+        this.Path = PathM;
+        this.Glob = Glob;
+    }
+
+    /**
      * @description returns 
      * @property
      * @static
@@ -30,7 +38,7 @@ module.exports = class LocRes {
      * @param {string} file system type
      * @returns {string} full path
      */
-    redirect(location, fileS = "posix") {
+    async redirect(location, fileS = "posix") {
         fileS = fileS.toLowerCase();
         const Path = fileS === "posix" ? PathM.posix : fileS === ("win32" || "nt") ? PathM.win32 : PathM;
         return Path.normalize(Path.join(this.indexDir, location)); //Joins index.js's absolute and normalizes it

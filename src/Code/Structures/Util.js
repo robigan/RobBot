@@ -1,4 +1,3 @@
-const Path = require("path");
 const Command = require("./Command.js");
 const EventHandler = require("./EventHandler.js");
 const LocRes = new (require("../../../LocationResolver.js"));
@@ -11,6 +10,7 @@ module.exports = class Util {
      */
     constructor(client) {
         this.client = client;
+        this.LocRes = LocRes;
     }
 
     /**
@@ -30,10 +30,10 @@ module.exports = class Util {
      */
     async loadCommands() {
         console.warn("Code    : Remember, only load commands you trust");
-        LocRes.glob(LocRes.redirect("/src/Code/Modules/Commands/**/*.js")).then((commands) => {
+        LocRes.glob(await LocRes.redirect("/src/Code/Modules/Commands/**/*.js")).then((commands) => {
             for (const commandFile of commands) {
                 delete require.cache[commandFile];
-                const { name } = Path.parse(commandFile);
+                const { name } = LocRes.Path.parse(commandFile);
                 const File = require(commandFile);
                 if (!this.isClass(File)) console.error(`Command ${name} doesn't export a class`);
                 const command = new File(this.client, name.toLowerCase());
@@ -57,10 +57,10 @@ module.exports = class Util {
      */
     async loadEventHandlers() {
         console.warn("Code    : Remember, only load EventHandlers you trust");
-        LocRes.glob(LocRes.redirect("/src/Code/Modules/EventHandlers/**/*.js")).then((eventHandlers) => {
+        LocRes.glob(await LocRes.redirect("/src/Code/Modules/EventHandlers/**/*.js")).then((eventHandlers) => {
             for (const eventFile of eventHandlers) {
                 delete require.cache[eventFile];
-                const { name } = Path.parse(eventFile);
+                const { name } = LocRes.Path.parse(eventFile);
                 const File = require(eventFile);
                 if (!this.isClass(File)) console.error(`Event ${name} doesn't export a class`);
                 const event = new File(this.client, name.toLowerCase());
