@@ -6,15 +6,16 @@
   "dependencies": {
     "@amanda/discordtypings": "github:AmandaDiscord/DiscordTypings",
     "amqplib-plus": "^1.0.9",
+    "cachegoose": "^8.0.0",
     "cloudstorm": "github:AmandaDiscord/CloudStorm#81b615e4bd741e188cdbeecfa30825463ec4477a",
     "glob-promise": "^4.1.0",
-    "mongoose": "^5.12.7",
+    "mongoose": "^5.12.9",
     "ms": "^2.1.3",
     "raincache": "github:AmandaDiscord/RainCache",
     "snowtransfer": "github:AmandaDiscord/SnowTransfer#12a511995c8a3bbfed92217f60f57afd7160691d"
   },
   "devDependencies": {
-    "eslint": "^7.25.0"
+    "eslint": "^7.26.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

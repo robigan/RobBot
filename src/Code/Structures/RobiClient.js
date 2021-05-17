@@ -38,6 +38,9 @@ module.exports = class RobiClient extends SnowTransfer {
             }, debug: false
         }, null, null);
 
+        const Database = require("../../Database/Database.js");
+        this.Database = new Database(config);
+
         this.Modules = {
             commands: new Map(),
             aliases: new Map(),
@@ -84,6 +87,8 @@ module.exports = class RobiClient extends SnowTransfer {
     async start() {
         await this.RainCache.initialize();
         this.Cache = this.RainCache.cache; // To try the other position
+        await this.Database.start();
+        await this.Database.loadTypes();
         console.log("Code    : Starting register process of command handlers");
         await this.utils.loadCommands().catch((err) => {
             console.error(err);

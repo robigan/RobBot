@@ -23,6 +23,11 @@ module.exports = class DatabaseManager {
         this.Mongoose.connect(this.Config.Mongoose.connect.url, this.Config.Mongoose.connect.options);
     }
 
+    /**
+     * Loads the different database "types"
+     * @async
+     * @function
+     */
     async loadTypes() {
         const Types = await LocRes.glob(await LocRes.redirect("src/Database/Types/*.js"));
         for (const Type of Types) {
