@@ -7,12 +7,12 @@
     "@amanda/discordtypings": "github:AmandaDiscord/DiscordTypings",
     "amqplib-plus": "^1.0.9",
     "cachegoose": "^8.0.0",
-    "cloudstorm": "github:AmandaDiscord/CloudStorm#81b615e4bd741e188cdbeecfa30825463ec4477a",
+    "cloudstorm": "github:AmandaDiscord/CloudStorm#a9cd240fee04b2ae4858569abda485d78056cfb7",
     "glob-promise": "^4.1.0",
     "mongoose": "^5.12.9",
     "ms": "^2.1.3",
-    "raincache": "github:AmandaDiscord/RainCache",
-    "snowtransfer": "github:AmandaDiscord/SnowTransfer#12a511995c8a3bbfed92217f60f57afd7160691d"
+    "raincache": "github:AmandaDiscord/RainCache#62db17f3f67edfe268670d09f9611add1b31408c",
+    "snowtransfer": "github:AmandaDiscord/SnowTransfer#36f0837b0dfd7ccea26c9f4f18d78b2f247e248f"
   },
   "devDependencies": {
     "eslint": "^7.26.0"
