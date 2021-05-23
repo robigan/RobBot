@@ -10,9 +10,8 @@ module.exports = class guilds extends BaseModel {
         }, {
             collection: this.name
         });
-        this.schema.pre("save", function(next) {
+        this.schema.pre("save", async function() {
             this._id = this.id;
-            next();
         });
         this.model = this.database.Mongoose.model(this.name, this.schema);
     }

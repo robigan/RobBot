@@ -1,0 +1,9 @@
+{
+    "id": "test",
+    "name": "Test suite",
+    "version": "1.0.0",
+    "description": "A test module for RobBot's new modular system",
+    "author": "robigan#1634",
+    "type": "command",
+    "permissions": null
+}

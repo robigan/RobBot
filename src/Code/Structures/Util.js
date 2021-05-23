@@ -30,7 +30,7 @@ module.exports = class Util {
      */
     async loadCommands() {
         console.warn("Code    : Remember, only load commands you trust");
-        LocRes.glob(await LocRes.redirect("/src/Code/Modules/Commands/**/*.js")).then((commands) => {
+        LocRes.glob(await LocRes.redirect("/Modules/Code/Commands/**/*.js")).then((commands) => {
             for (const commandFile of commands) {
                 delete require.cache[commandFile];
                 const { name } = LocRes.Path.parse(commandFile);
@@ -57,7 +57,7 @@ module.exports = class Util {
      */
     async loadEventHandlers() {
         console.warn("Code    : Remember, only load EventHandlers you trust");
-        LocRes.glob(await LocRes.redirect("/src/Code/Modules/EventHandlers/**/*.js")).then((eventHandlers) => {
+        LocRes.glob(await LocRes.redirect("/Modules/Code/EventHandlers/**/*.js")).then((eventHandlers) => {
             for (const eventFile of eventHandlers) {
                 delete require.cache[eventFile];
                 const { name } = LocRes.Path.parse(eventFile);
@@ -67,6 +67,21 @@ module.exports = class Util {
                 if (!(event instanceof EventHandler)) throw new TypeError(`Event ${name} doesn't belong in EventHandlers`);
                 if (this.client.Modules.eventHandlers.get(event.name)) throw new SyntaxError(`Event ${event.name} has already been defined, please rename it to something else`);
                 this.client.Modules.eventHandlers.set(event.name, event);
+            }
+        });
+    }
+
+    async loadModules() {
+        console.warn("Code    : Remember, only load Modules you trust");
+        LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json")).then((modules) => {
+            for (const ManifestPath of modules) {
+                delete require.cache[ManifestPath];
+                const Manifest = require(ManifestPath);
+                if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Event ${Manifest.id} has already been loaded`);
+                const PluginPath = LocRes.Path.dirname(ManifestPath) + "/index.js";
+                delete require.cache[ManifestPath];
+                const Plugin = new (require(PluginPath))(this.client);
+                this.client.Modules.modules.set(Manifest.id, {"manifest": Manifest, "plugin": Plugin});
             }
         });
     }

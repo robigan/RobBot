@@ -1,6 +1,5 @@
 const SnowTransfer = require("snowtransfer");
 const RainCache = require("raincache");
-//const MongoDB = require("mongodb");
 const Util = require("./Util.js");
 
 module.exports = class RobiClient extends SnowTransfer {
@@ -38,15 +37,19 @@ module.exports = class RobiClient extends SnowTransfer {
             }, debug: false
         }, null, null);
 
-        const Database = require("../../Database/Database.js");
-        this.Database = new Database(config);
+        /*const Database = require("../../Database/Database.js");
+        this.Database = new Database(config);*/
 
         this.Modules = {
             commands: new Map(),
             aliases: new Map(),
             eventHandlers: new Map(),
+            modules: new Map(),
+            structures: new Map(),
             channel: null,
         };
+        this.Modules.structures.set("MessageEmbed", (require("./MessageEmbed.js")));
+
         this.utils = new Util(this);
 
         console.log("Code    : Starting register process of event handlers");
@@ -87,8 +90,8 @@ module.exports = class RobiClient extends SnowTransfer {
     async start() {
         await this.RainCache.initialize();
         this.Cache = this.RainCache.cache; // To try the other position
-        await this.Database.start();
-        await this.Database.loadTypes();
+        /*await this.Database.start();
+        await this.Database.loadTypes();*/
         console.log("Code    : Starting register process of command handlers");
         await this.utils.loadCommands().catch((err) => {
             console.error(err);
@@ -96,14 +99,13 @@ module.exports = class RobiClient extends SnowTransfer {
             console.log("Code    : Register process of command handlers complete");
         });
         this.AmqpClient.initQueueAndConsume(this.config.amqp.queueCacheCode, undefined, async (event, ch) => {
-
             const ParsedEvent = JSON.parse(event.content.toString());
             // I believe this code is more efficient simply due to the fact that it should use less ram, doesn't have to go through Events and messages can be requeued
             const Dispatch = async (event) => {
                 this.debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
                 this.debug.events.data && this.debug.events.data[event.t] ? console.log("data", event.d) : undefined;
                 if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
-                    (this.Modules.eventHandlers.get((event.t).toLowerCase())).run(event, event.d).catch(console.error);
+                    await (this.Modules.eventHandlers.get((event.t).toLowerCase())).run(event, event.d).catch(console.error);
                 }
             };
 
@@ -112,10 +114,11 @@ module.exports = class RobiClient extends SnowTransfer {
                 console.error(err);
                 ch.nack(event, false, true);
                 return;
+            }).then(() => {
+                ch.ack(event);
             });
-            ch.ack(event);
         }).then(async ch => {
-            this.Modules.channel = ch.assertQueue(this.config.amqp.queueCodeGateway);
+            this.Modules.channel = ch.assertQueue(this.config.amqp.queueCodeGateway,  { durable: false, autoDelete: true });
         });
     }
 };

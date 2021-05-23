@@ -11,7 +11,7 @@
     "glob-promise": "^4.1.0",
     "mongoose": "^5.12.9",
     "ms": "^2.1.3",
-    "raincache": "github:AmandaDiscord/RainCache#62db17f3f67edfe268670d09f9611add1b31408c",
+    "raincache": "github:AmandaDiscord/RainCache#8f510448ed1d900a0a85e4345fbc5288a19c82ab",
     "snowtransfer": "github:AmandaDiscord/SnowTransfer#36f0837b0dfd7ccea26c9f4f18d78b2f247e248f"
   },
   "devDependencies": {
