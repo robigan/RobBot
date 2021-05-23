@@ -1,8 +1,4 @@
 {
-    "ownerBot": {
-        "id": "315526915828219906"
-    },
-    "prefix": "/",
     "SnowTransfer": {},
     "Mongoose": {
         "connect": {

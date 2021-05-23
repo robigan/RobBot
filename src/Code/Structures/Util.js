@@ -81,7 +81,10 @@ module.exports = class Util {
                 const PluginPath = LocRes.Path.dirname(ManifestPath) + "/index.js";
                 delete require.cache[PluginPath];
                 const Plugin = new (require(PluginPath))(this.client);
-                this.client.Modules.modules.set(Manifest.id, {"manifest": Manifest, "plugin": Plugin});
+                (async () => {
+                    Plugin.pluginWillLoad();
+                    this.client.Modules.modules.set(Manifest.id, {"manifest": Manifest, "plugin": Plugin});
+                })().catch(console.error);
             }
         });
     }

@@ -4,7 +4,6 @@ module.exports = class guilds extends BaseModel {
     constructor(database) {
         super(database, "guilds");
         this.schema = new this.database.Mongoose.Schema({
-            prefix: String,
             id: String,
             _id: String
         }, {

@@ -19,7 +19,7 @@ module.exports = class RobiClient extends SnowTransfer {
             "ownerBot": config.ownerbot,
             "token": config.token,
             "selfID": "",
-            "prefix": config.prefix
+            /*"prefix": config.prefix*/
         };
 
         const RainCacheConfig = require("../../../Configs/CacheClient.json");
@@ -71,8 +71,8 @@ module.exports = class RobiClient extends SnowTransfer {
 
         if (!config.token) throw new Error("You must pass the token for the client");
 
-        if (!config.prefix) throw new Error("You must pass a prefix for the client");
-        if (typeof config.prefix !== "string") throw new TypeError("Prefix should be a type of String");
+        /*if (!config.prefix) throw new Error("You must pass a prefix for the client");
+        if (typeof config.prefix !== "string") throw new TypeError("Prefix should be a type of String");*/
 
         if (config.debug) {
             console.warn("Code    : Debug mode enabled...");

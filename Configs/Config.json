@@ -1,4 +1,8 @@
 {
+    "Bot": {
+        "appID": "330957377572569089",
+        "owner": "315526915828219906"
+    },
     "amqp": {
         "connection": {
             "host": "localhost",
