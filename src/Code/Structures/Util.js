@@ -30,8 +30,8 @@ module.exports = class Util {
      */
     async loadCommands() {
         console.warn("Code    : Remember, only load commands you trust");
-        LocRes.glob(await LocRes.redirect("/Modules/Code/Commands/**/*.js")).then((commands) => {
-            for (const commandFile of commands) {
+        //LocRes.glob(await LocRes.redirect("/Modules/Code/Commands/**/*.js")).then((commands) => {
+        /*    for (const commandFile of commands) {
                 delete require.cache[commandFile];
                 const { name } = LocRes.Path.parse(commandFile);
                 const File = require(commandFile);
@@ -47,7 +47,7 @@ module.exports = class Util {
                     }
                 }
             }
-        });
+        });*/
     }
 
     /**
@@ -79,7 +79,7 @@ module.exports = class Util {
                 const Manifest = require(ManifestPath);
                 if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Event ${Manifest.id} has already been loaded`);
                 const PluginPath = LocRes.Path.dirname(ManifestPath) + "/index.js";
-                delete require.cache[ManifestPath];
+                delete require.cache[PluginPath];
                 const Plugin = new (require(PluginPath))(this.client);
                 this.client.Modules.modules.set(Manifest.id, {"manifest": Manifest, "plugin": Plugin});
             }

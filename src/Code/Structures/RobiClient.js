@@ -49,6 +49,7 @@ module.exports = class RobiClient extends SnowTransfer {
             channel: null,
         };
         this.Modules.structures.set("MessageEmbed", (require("./MessageEmbed.js")));
+        this.Modules.structures.set("Command", new (require("./Command.test.js"))(this));
 
         this.utils = new Util(this);
 
@@ -93,7 +94,7 @@ module.exports = class RobiClient extends SnowTransfer {
         /*await this.Database.start();
         await this.Database.loadTypes();*/
         console.log("Code    : Starting register process of command handlers");
-        await this.utils.loadCommands().catch((err) => {
+        await this.utils.loadModules().catch((err) => {
             console.error(err);
         }).finally(() => {
             console.log("Code    : Register process of command handlers complete");

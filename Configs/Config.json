@@ -12,10 +12,10 @@
     },
     "debug": {
         "events": {
-            "type": false,
+            "type": true,
             "data": {
                 "READY": false,
-                "MESSAGE_CREATE": false
+                "MESSAGE_CREATE": true
             }
         },
         "cacheUpdate": false,
