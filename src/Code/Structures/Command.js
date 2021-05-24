@@ -11,7 +11,7 @@ module.exports = class Command {
     /**
      * Register a new command
      * @param {string} name
-     * @param {function(Message, Args)} command
+     * @param {function(InteractionData)} command
      * @param {Object} options 
      */
     async register(name, command, options) {

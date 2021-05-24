@@ -51,18 +51,19 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Modules.structures.set("MessageEmbed", (require("./MessageEmbed.js")));
         this.Modules.structures.set("Command", new (require("./Command.js"))(this));
         this.Modules.structures.set("EventHandler", new (require("./EventHandler.js"))(this));
-        this.Modules.structures.get("EventHandler").register("interaction_create", async () => {
-            console.log("An interaction came in!");
+        this.Modules.structures.get("EventHandler").register("interaction_create", async (Event, Data) => {
+            const command = this.Modules.commands.get(Data.data.name);
+            if (!command) throw new Error("Received slash for command for non existent/registered command!");
+            this.debug.command ? console.log(`Command: ${Data.data.name}`) : undefined;
+            command(Data).catch(err => {
+                console.error(err);
+                this.client.channel.createMessage(Data.channel_id, `<@${Data.member ? Data.member.user.id : Data.user.id}> Error when running command, ${err}`);
+            });
         });
 
-        this.utils = new Util(this);
+        this.Utils = new Util(this);
 
         console.log("Code    : Starting register process of event handlers");
-        this.utils.loadEventHandlers().catch((err) => {
-            console.error(err);
-        }).finally(() => {
-            console.log("Code    : Register process of event handlers complete");
-        });
     }
 
     /**
@@ -94,29 +95,28 @@ module.exports = class RobiClient extends SnowTransfer {
      */
     async start() {
         await this.RainCache.initialize();
-        this.Cache = this.RainCache.cache; // To try the other position
+        this.Cache = this.RainCache.cache;
         /*await this.Database.start();
         await this.Database.loadTypes();*/
         console.log("Code    : Starting register process of modules");
-        await this.utils.loadModules().catch((err) => {
+        await this.Utils.loadModules().catch((err) => {
             console.error(err);
         }).finally(() => {
             console.log("Code    : Register process of Modules complete");
         }).catch(err => console.error("Error while loading modules\n", err));
         this.AmqpClient.initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());
-            // I believe this code is more efficient simply due to the fact that it should use less ram, doesn't have to go through Events and messages can be requeued
             const Dispatch = async (event) => {
                 this.debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
                 this.debug.events.data && this.debug.events.data[event.t] ? console.log("data", event.d) : undefined;
                 if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
-                    await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event, event.d).catch(console.error);
+                    await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event, event.d).catch(err => console.error("Error while handling event\n", err));
                 }
             };
 
             this.debug.opCodes ? console.warn(`Code    : Received op code ${ParsedEvent.op}`) : undefined;
             Dispatch(ParsedEvent).catch(err => {
-                console.error(err);
+                console.error("Error while dispatching event\n", err);
                 ch.nack(event, false, true);
                 return;
             }).then(() => {

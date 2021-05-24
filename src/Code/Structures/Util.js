@@ -23,26 +23,10 @@ module.exports = class Util {
     }
 
     /**
-     * Load Event Handlers
+     * Load event handlers
      * @async
      * @function
      */
-    async loadEventHandlers() {
-        console.warn("Code    : Remember, only load EventHandlers you trust");
-        //LocRes.glob(await LocRes.redirect("/Modules/Code/EventHandlers/**/*.js")).then((eventHandlers) => {
-        /*    for (const eventFile of eventHandlers) {
-                delete require.cache[eventFile];
-                const { name } = LocRes.Path.parse(eventFile);
-                const File = require(eventFile);
-                if (!this.isClass(File)) console.error(`Event ${name} doesn't export a class`);
-                const event = new File(this.client, name.toLowerCase());
-                if (!(event instanceof EventHandler)) throw new TypeError(`Event ${name} doesn't belong in EventHandlers`);
-                if (this.client.Modules.eventHandlers.get(event.name)) throw new SyntaxError(`Event ${event.name} has already been defined, please rename it to something else`);
-                this.client.Modules.eventHandlers.set(event.name, event);
-            }
-        });*/
-    }
-
     async loadModules() {
         console.warn("Code    : Remember, only load Modules you trust");
         LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json")).then((modules) => {

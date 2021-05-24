@@ -8,12 +8,11 @@ module.exports = class Test {
     }
 
     async pluginWillLoad() {
-        this.client.Modules.structures.get("Command").register("test", async (Message) => {
-            this.client.channel.createMessage(Message.channel_id, "Test");
-            console.log("Ran test command");
+        this.client.Modules.structures.get("Command").register("test", async (Data) => {
+            this.client.interaction.createInteractionResponse(Data.id, Data.token, {"type": 4, "data": {"content": "Hello World!"}});
         });
-        this.client.Modules.structures.get("EventHandler").register("message_create", async () => {
+        /*this.client.Modules.structures.get("EventHandler").register("message_create", async () => {
             console.log("A message came in!");
-        });
+        });*/
     }
 };
