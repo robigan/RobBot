@@ -6,20 +6,20 @@ module.exports = class RobiClient extends SnowTransfer {
     /**
      * Initiate the RobiClient for RobBot
      * @constructor
-     * @param {Object} config 
+     * @param {Object} Config 
      * @param {import("../../amqp/AmqpClient")} AmqpClient 
      */
-    constructor(config = {}, AmqpClient) {
-        super(config.token, config.SnowTransfer);
-        this.validate(config);
+    constructor(Config = {}, AmqpClient) {
+        super(Config.token, Config.SnowTransfer);
+        this.validate(Config);
 
         this.AmqpClient = AmqpClient;
 
         this.Identify = {
-            "ownerBot": config.ownerbot,
-            "token": config.token,
+            "ownerBot": Config.ownerbot,
+            "token": Config.token,
             "selfID": "",
-            /*"prefix": config.prefix*/
+            /*"prefix": Config.prefix*/
         };
 
         const RainCacheConfig = require("../../../Configs/CacheClient.json");
@@ -38,7 +38,7 @@ module.exports = class RobiClient extends SnowTransfer {
         }, null, null);
 
         /*const Database = require("../../Database/Database.js");
-        this.Database = new Database(config);*/
+        this.Database = new Database(Config);*/
 
         this.Modules = {
             commands: new Map(),
@@ -49,7 +49,11 @@ module.exports = class RobiClient extends SnowTransfer {
             channel: null,
         };
         this.Modules.structures.set("MessageEmbed", (require("./MessageEmbed.js")));
-        this.Modules.structures.set("Command", new (require("./Command.test.js"))(this));
+        this.Modules.structures.set("Command", new (require("./Command.js"))(this));
+        this.Modules.structures.set("EventHandler", new (require("./EventHandler.js"))(this));
+        this.Modules.structures.get("EventHandler").register("interaction_create", async () => {
+            console.log("An interaction came in!");
+        });
 
         this.utils = new Util(this);
 
@@ -64,23 +68,23 @@ module.exports = class RobiClient extends SnowTransfer {
     /**
      * Validates that the provided config is valid cus yes
      * @function
-     * @param {Object} config 
+     * @param {Object} Config 
      */
-    validate(config) {
-        if (typeof config !== "object") throw new TypeError("Config and should be a type of Object");
+    validate(Config) {
+        if (typeof Config !== "object") throw new TypeError("Config and should be a type of Object");
 
-        if (!config.token) throw new Error("You must pass the token for the client");
+        if (!Config.token) throw new Error("You must pass the token for the client");
 
-        /*if (!config.prefix) throw new Error("You must pass a prefix for the client");
-        if (typeof config.prefix !== "string") throw new TypeError("Prefix should be a type of String");*/
+        /*if (!Config.prefix) throw new Error("You must pass a prefix for the client");
+        if (typeof Config.prefix !== "string") throw new TypeError("Prefix should be a type of String");*/
 
-        if (config.debug) {
+        if (Config.debug) {
             console.warn("Code    : Debug mode enabled...");
-            this.debug = config.debug;
+            this.debug = Config.debug;
         }
         this.debug ?? false;
 
-        this.config = config;
+        this.Config = Config;
     }
 
     /**
@@ -93,20 +97,20 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Cache = this.RainCache.cache; // To try the other position
         /*await this.Database.start();
         await this.Database.loadTypes();*/
-        console.log("Code    : Starting register process of command handlers");
+        console.log("Code    : Starting register process of modules");
         await this.utils.loadModules().catch((err) => {
             console.error(err);
         }).finally(() => {
-            console.log("Code    : Register process of command handlers complete");
-        });
-        this.AmqpClient.initQueueAndConsume(this.config.amqp.queueCacheCode, undefined, async (event, ch) => {
+            console.log("Code    : Register process of Modules complete");
+        }).catch(err => console.error("Error while loading modules\n", err));
+        this.AmqpClient.initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());
             // I believe this code is more efficient simply due to the fact that it should use less ram, doesn't have to go through Events and messages can be requeued
             const Dispatch = async (event) => {
                 this.debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
                 this.debug.events.data && this.debug.events.data[event.t] ? console.log("data", event.d) : undefined;
                 if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
-                    await (this.Modules.eventHandlers.get((event.t).toLowerCase())).run(event, event.d).catch(console.error);
+                    await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event, event.d).catch(console.error);
                 }
             };
 
@@ -119,7 +123,7 @@ module.exports = class RobiClient extends SnowTransfer {
                 ch.ack(event);
             });
         }).then(async ch => {
-            this.Modules.channel = ch.assertQueue(this.config.amqp.queueCodeGateway,  { durable: false, autoDelete: true });
+            this.Modules.channel = ch.assertQueue(this.Config.amqp.queueCodeGateway,  { durable: false, autoDelete: true });
         });
     }
 };

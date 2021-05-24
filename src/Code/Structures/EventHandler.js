@@ -7,26 +7,22 @@ module.exports = class EventHandler {
      * Base class for event handlers
      * @constructor
      * @param {import("./RobiClient")} client 
-     * @param {string} name 
-     * @param {string} description 
-     * @param {object} flags 
      */
-    constructor(client, name, description, flags = {}) {
+    constructor(client) {
         this.client = client;
-        this.name = name;
-        this.description = description || "No description provided";
-        this.flags = flags;
     }
 
     /**
-     * Run event handler
-     * @async
-     * @function
-     * @param {import("cloudstorm/dist/Types").IWSMessage} event
-     * @param {*} data
+     * 
+     * @param {string} event_type
+     * @param {function(Event, Data)} handler
      */
-    async run(event, data) {
-        console.log(`Event ${this.name} doesn't provide a run method, event type: ${event.t}`);
-        console.log("And the Data:", data);
+    async register(event_type, handler) {
+        if (this.client.Modules.eventHandlers.get(event_type.toLowerCase())) throw new SyntaxError(`Event handler ${event_type} has already been registered`);
+        this.client.Modules.eventHandlers.set(event_type.toLowerCase(), handler);
+    }
+
+    async unregister(event_type) {
+        this.client.Modules.eventHandlers.delete(event_type);
     }
 };

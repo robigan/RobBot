@@ -1,5 +1,4 @@
-const Command = require("./Command.js");
-const EventHandler = require("./EventHandler.js");
+//const EventHandler = require("./EventHandler.js");
 const LocRes = new (require("../../../LocationResolver.js"));
 
 module.exports = class Util {
@@ -24,41 +23,14 @@ module.exports = class Util {
     }
 
     /**
-     * Load Commands
-     * @async
-     * @function
-     */
-    async loadCommands() {
-        console.warn("Code    : Remember, only load commands you trust");
-        //LocRes.glob(await LocRes.redirect("/Modules/Code/Commands/**/*.js")).then((commands) => {
-        /*    for (const commandFile of commands) {
-                delete require.cache[commandFile];
-                const { name } = LocRes.Path.parse(commandFile);
-                const File = require(commandFile);
-                if (!this.isClass(File)) console.error(`Command ${name} doesn't export a class`);
-                const command = new File(this.client, name.toLowerCase());
-                if (!(command instanceof Command)) throw new TypeError(`Command ${name} doesn't belong in Commands`);
-                if (this.client.Modules.commands.get(command.name)) throw new SyntaxError(`Command ${command.name} has already been defined, please rename it to something else`);
-                this.client.Modules.commands.set(command.name, command);
-                if (command.aliases.length) {
-                    for (const alias of command.aliases) {
-                        if (this.client.Modules.aliases.get(alias.toLowerCase()) || this.client.Modules.commands.get(alias.toLowerCase())) throw new SyntaxError(`Alias ${alias} has already been defined, please rename ${command.name} to something else`);
-                        this.client.Modules.aliases.set(alias.toLowerCase(), command.name);
-                    }
-                }
-            }
-        });*/
-    }
-
-    /**
      * Load Event Handlers
      * @async
      * @function
      */
     async loadEventHandlers() {
         console.warn("Code    : Remember, only load EventHandlers you trust");
-        LocRes.glob(await LocRes.redirect("/Modules/Code/EventHandlers/**/*.js")).then((eventHandlers) => {
-            for (const eventFile of eventHandlers) {
+        //LocRes.glob(await LocRes.redirect("/Modules/Code/EventHandlers/**/*.js")).then((eventHandlers) => {
+        /*    for (const eventFile of eventHandlers) {
                 delete require.cache[eventFile];
                 const { name } = LocRes.Path.parse(eventFile);
                 const File = require(eventFile);
@@ -68,7 +40,7 @@ module.exports = class Util {
                 if (this.client.Modules.eventHandlers.get(event.name)) throw new SyntaxError(`Event ${event.name} has already been defined, please rename it to something else`);
                 this.client.Modules.eventHandlers.set(event.name, event);
             }
-        });
+        });*/
     }
 
     async loadModules() {
@@ -84,13 +56,13 @@ module.exports = class Util {
                 (async () => {
                     Plugin.pluginWillLoad();
                     this.client.Modules.modules.set(Manifest.id, {"manifest": Manifest, "plugin": Plugin});
-                })().catch(console.error);
+                })().catch(err => console.error("Error while loading modules\n", err));
             }
         });
     }
 
     async makeGatewayRequest(content) {
-        this.client.Modules.channel.sendToQueue(this.client.config.amqp.queueCodeGateway, content);
+        this.client.Modules.channel.sendToQueue(this.client.Config.amqp.queueCodeGateway, content);
     }
 
     /**

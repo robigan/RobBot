@@ -12,5 +12,8 @@ module.exports = class Test {
             this.client.channel.createMessage(Message.channel_id, "Test");
             console.log("Ran test command");
         });
+        this.client.Modules.structures.get("EventHandler").register("message_create", async () => {
+            console.log("A message came in!");
+        });
     }
 };
