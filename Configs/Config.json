@@ -16,15 +16,15 @@
     },
     "debug": {
         "events": {
-            "type": true,
+            "type": false,
             "data": {
                 "READY": false,
-                "MESSAGE_CREATE": true
+                "MESSAGE_CREATE": false
             }
         },
         "cacheUpdate": false,
         "opCodes": false,
         "command": true,
-        "init": true
+        "init": false
     }
 }

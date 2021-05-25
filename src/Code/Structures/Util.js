@@ -19,7 +19,7 @@ module.exports = class Util {
      */
     isClass(input) {
         return typeof input === "function" && typeof input.prototype === "object" &&
-        input.toString().substring(0, 5) === "class";
+            input.toString().substring(0, 5) === "class";
     }
 
     /**
@@ -34,19 +34,19 @@ module.exports = class Util {
                 delete require.cache[ManifestPath];
                 const Manifest = require(ManifestPath);
                 if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Event ${Manifest.id} has already been loaded`);
-                const PluginPath = LocRes.Path.dirname(ManifestPath) + "/index.js";
-                delete require.cache[PluginPath];
-                const Plugin = new (require(PluginPath))(this.client);
+                const ModulePath = LocRes.Path.dirname(ManifestPath) + "/index.js";
+                delete require.cache[ModulePath];
+                const Module = new (require(ModulePath))(this.client);
                 (async () => {
-                    Plugin.pluginWillLoad();
-                    this.client.Modules.modules.set(Manifest.id, {"manifest": Manifest, "plugin": Plugin});
+                    Module.moduleWillLoad();
+                    this.client.Modules.modules.set(Manifest.id, { "manifest": Manifest, "module": Module });
                 })().catch(err => console.error("Error while loading modules\n", err));
             }
         });
     }
 
     async makeGatewayRequest(content) {
-        this.client.Modules.channel.sendToQueue(this.client.Config.amqp.queueCodeGateway, content);
+        this.client.Modules.channel.sendToQueue(this.client.Config.amqp.queueCodeGateway, JSON.stringify(content));
     }
 
     /**
@@ -62,9 +62,18 @@ module.exports = class Util {
             const len = arr.length - maxLen;
             arr = arr.slice(0, maxLen);
             arr.push(`${len} more...`);
-        } else if(arr.length < maxLen) {
+        } else if (arr.length < maxLen) {
             arr.join(", ");
         }
         return arr;
+    }
+
+    async sendErrorDetails(Data, Err, Type) {
+        this.client.interaction.createInteractionResponse(Data.id, Data.token, {
+            "type": 4, "data": {
+                "content": `Error while processing the slash interaction.\nError type: ${Type}\nError details: ${Err.toString()}`,
+                "flags": 64
+            }
+        }, );
     }
 };

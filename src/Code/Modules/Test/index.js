@@ -7,7 +7,7 @@ module.exports = class Test {
         this.client = client;
     }
 
-    async pluginWillLoad() {
+    async moduleWillLoad() {
         this.client.Modules.structures.get("Command").register("test", async (Data) => {
             this.client.interaction.createInteractionResponse(Data.id, Data.token, {"type": 4, "data": {"content": "Hello World!"}});
         });

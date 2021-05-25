@@ -54,10 +54,10 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Modules.structures.get("EventHandler").register("interaction_create", async (Event, Data) => {
             const command = this.Modules.commands.get(Data.data.name);
             if (!command) throw new Error("Received slash for command for non existent/registered command!");
-            this.debug.command ? console.log(`Command: ${Data.data.name}`) : undefined;
-            command(Data).catch(err => {
-                console.error(err);
-                this.client.channel.createMessage(Data.channel_id, `<@${Data.member ? Data.member.user.id : Data.user.id}> Error when running command, ${err}`);
+            this.debug.command ? console.log(`Author: ${Data.member ? Data.member.user.username : Data.user.username}\nCommand: ${Data.data.name}`) : undefined;
+            command.command(Data).catch(err => {
+                console.error("Error while running command\n", err);
+                this.Utils.sendErrorDetails(Data, err, "Command failure");
             });
         });
 
@@ -110,7 +110,10 @@ module.exports = class RobiClient extends SnowTransfer {
                 this.debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
                 this.debug.events.data && this.debug.events.data[event.t] ? console.log("data", event.d) : undefined;
                 if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
-                    await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event, event.d).catch(err => console.error("Error while handling event\n", err));
+                    await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event, event.d).catch(err => {
+                        console.error("Error while handling event\n", err);
+                        this.Utils.sendErrorDetails(event.d, err, "Handler failure");
+                    });
                 }
             };
 
