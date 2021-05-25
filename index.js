@@ -3,7 +3,7 @@ const Code = require("./Starters/Code.js");
 const Gateway = require("./Starters/Gateway.js");
 const Cache = require("./Starters/Cache.js");
 
-const AmqpClient = new (require("./amqp/AmqpClient.js"))(require("./Configs/Config.json").amqp);
+const AmqpClient = new (require("./src/amqp/AmqpClient.js"))(require("./Configs/Config.json").amqp);
 
 (async () => {
     await AmqpClient.start();

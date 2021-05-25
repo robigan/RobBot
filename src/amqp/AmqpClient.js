@@ -46,9 +46,7 @@ module.exports = class AmqpClient extends amqp.Connection {
      * @function
      * @param {string} Interface 
      * @param {object} QueueOptions 
-     * @param {function Handler(event, ch) {
-         
-     } Handler 
+     * @param {function(event, ch)} Handler 
      * @param {object} ConsumeOptions 
      * @returns {import("@types/amqplib/index").Channel} Channel
      */

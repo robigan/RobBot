@@ -25,7 +25,6 @@ module.exports = class extends Command {
             this.client.Modules.eventHandlers.forEach((value, key) => {
                 this.client.Modules.eventHandlers.delete(key);
             });
-            this.client.utils.loadCommands();
             this.client.utils.loadEventHandlers();
             this.client.channel.createMessage(message.channel_id, "Reloaded commands and event handlers!");
             super.report(message.author.username, "Reloaded commands and event handlers!");

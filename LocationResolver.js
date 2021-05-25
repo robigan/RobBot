@@ -4,7 +4,7 @@
  */
 
 const PathM = require("path");
-const { stat: fsStat} = require("fs").promises;
+const { stat: fsStat } = require("fs").promises;
 const Glob = require("glob-promise");
 
 /**
@@ -13,8 +13,22 @@ const Glob = require("glob-promise");
  */
 module.exports = class LocRes {
     /**
+     * @constructor
+     * @param {Array} Config
+     */
+    constructor(Config = [
+        {
+            "Path": "/Modules/Code",
+            "Resolve": "/src/Code/Modules"
+        }
+    ]) {
+        this.Config = Config;
+        this.Path = PathM;
+        this.Glob = Glob;
+    }
+
+    /**
      * @description returns 
-     * @property
      * @static
      * @returns {string} Process cwd
      */
@@ -30,9 +44,12 @@ module.exports = class LocRes {
      * @param {string} file system type
      * @returns {string} full path
      */
-    redirect(location, fileS = "posix") {
+    async redirect(location, fileS = "posix") {
         fileS = fileS.toLowerCase();
         const Path = fileS === "posix" ? PathM.posix : fileS === ("win32" || "nt") ? PathM.win32 : PathM;
+        for (const Resolve of this.Config) {
+            location.startsWith(Resolve.Path) ? location = (Resolve.Resolve + location.slice(Resolve.Path.length)) : undefined;
+        }
         return Path.normalize(Path.join(this.indexDir, location)); //Joins index.js's absolute and normalizes it
     }
 
@@ -43,9 +60,15 @@ module.exports = class LocRes {
      * @returns {Promise}
      */
     async glob(Path) {
-        return Glob(Path); 
+        return Glob(Path);
     } //Note that Glob here has been promisified
 
+    /**
+     * Validate if a file/directory exists
+     * @param {string} location 
+     * @param {string} flag 
+     * @returns 
+     */
     async validate(location, flag = "file") {
         return fsStat(location, (err, stat) => {
             if (err === null) {
