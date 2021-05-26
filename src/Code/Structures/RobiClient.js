@@ -42,7 +42,6 @@ module.exports = class RobiClient extends SnowTransfer {
 
         this.Modules = {
             commands: new Map(),
-            aliases: new Map(),
             eventHandlers: new Map(),
             modules: new Map(),
             structures: new Map(),
@@ -52,9 +51,9 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Modules.structures.set("Command", new (require("./Command.js"))(this));
         this.Modules.structures.set("EventHandler", new (require("./EventHandler.js"))(this));
         this.Modules.structures.get("EventHandler").register("interaction_create", async (Event, Data) => {
-            const command = this.Modules.commands.get(Data.data.name);
-            if (!command) throw new Error("Received slash for command for non existent/registered command!");
-            this.debug.command ? console.log(`Author: ${Data.member ? Data.member.user.username : Data.user.username}\nCommand: ${Data.data.name}`) : undefined;
+            const command = this.Modules.commands.get(Data.data.id);
+            if (!command) throw new Error("Received slash command for non existent/registered command");
+            this.debug.command ? console.log(`Author  : ${Data.member ? Data.member.user.username : Data.user.username}\nCommand : ${command.options.name}`) : undefined;
             command.command(Data).catch(err => {
                 console.error("Error while running command\n", err);
                 this.Utils.sendErrorDetails(Data, err, "Command failure");
@@ -62,8 +61,6 @@ module.exports = class RobiClient extends SnowTransfer {
         });
 
         this.Utils = new Util(this);
-
-        console.log("Code    : Starting register process of event handlers");
     }
 
     /**
