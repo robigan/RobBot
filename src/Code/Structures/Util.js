@@ -28,10 +28,6 @@ module.exports = class Util {
      * @function
      */
     async loadModules() {
-        /*const AppCommands = await this.client.interaction.getApplicationCommands(this.client.Config.Bot.appID);
-        for (const Command of AppCommands) {
-            this.client.Modules.commands.set(Command.id, { "options": Command, "command":  async (Data) => this.sendErrorDetails(Data, "Associated command not registered", "Module failure") });
-        }*/
         console.warn("Code    : Remember, only load Modules you trust");
         LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json")).then((modules) => {
             for (const ManifestPath of modules) {

@@ -16,10 +16,10 @@ module.exports = class RobiClient extends SnowTransfer {
         this.AmqpClient = AmqpClient;
 
         this.Identify = {
-            "ownerBot": Config.ownerbot,
+            "ownerBot": Config.Bot.owner,
+            "appID": Config.Bot.appID,
             "token": Config.token,
-            "selfID": "",
-            /*"prefix": Config.prefix*/
+            "selfID": ""
         };
 
         const RainCacheConfig = require("../../../Configs/CacheClient.json");
@@ -44,12 +44,12 @@ module.exports = class RobiClient extends SnowTransfer {
             commands: new Map(),
             eventHandlers: new Map(),
             modules: new Map(),
-            structures: new Map(),
+            structures: new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)]]),
             channel: null,
         };
-        this.Modules.structures.set("MessageEmbed", (require("./MessageEmbed.js")));
+        /*this.Modules.structures.set("MessageEmbed", (require("./MessageEmbed.js")));
         this.Modules.structures.set("Command", new (require("./Command.js"))(this));
-        this.Modules.structures.set("EventHandler", new (require("./EventHandler.js"))(this));
+        this.Modules.structures.set("EventHandler", new (require("./EventHandler.js"))(this));*/
         this.Modules.structures.get("EventHandler").register("interaction_create", async (Event, Data) => {
             const command = this.Modules.commands.get(Data.data.id);
             if (!command) throw new Error("Received slash command for non existent/registered command");
