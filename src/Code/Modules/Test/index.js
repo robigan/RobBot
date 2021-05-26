@@ -8,9 +8,9 @@ module.exports = class Test {
     }
 
     async moduleWillLoad() {
-        this.client.Modules.structures.get("Command").register("test", async (Data) => {
+        this.client.Modules.structures.get("Command").register(undefined, async (Data) => {
             this.client.interaction.createInteractionResponse(Data.id, Data.token, {"type": 4, "data": {"content": "Hello World!"}});
-        });
+        }, {"name": "test", "description": "Test command that helps check that the full interaction system works..."});
         /*this.client.Modules.structures.get("EventHandler").register("message_create", async () => {
             console.log("A message came in!");
         });*/

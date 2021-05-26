@@ -70,15 +70,9 @@ module.exports = class LocRes {
      * @returns 
      */
     async validate(location, flag = "file") {
-        return fsStat(location, (err, stat) => {
-            if (err === null) {
-                return stat.isDirectory() && flag === "directory" ? true : flag === "file" && stat.isFile() ? true : flag === "all" ? true : false;
-            } else if (err.code === "ENOENT") {
-                return false;
-            } else {
-                console.error("LocRes error whilst validating: ", err.code);
-                return false;
-            }
+        const stat = await fsStat(location).catch(err => {
+            if (!(err.code === "ENOENT")) console.error("LocRes error whilst validating:", err.code);
         });
+        return stat ? stat.isDirectory() && flag === "directory" ? true : flag === "file" && stat.isFile() ? true : flag === "all" ? true : false : false;
     }
 };

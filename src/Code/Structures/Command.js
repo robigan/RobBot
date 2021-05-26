@@ -10,47 +10,47 @@ module.exports = class Command {
 
     /**
      * Register a new command
-     * @param {string} name
-     * @param {function(InteractionData)} command
-     * @param {Object} options 
+     * @param {import("@amanda/discordtypings").Snowflake} id
+     * @param {function(import("@amanda/discordtypings").InteractionData)} command
+     * @param {{"description": string, "category": string, "man": string, "type": ("global" | "guild"), "guild_id": string, "options": import("@amanda/discordtypings").ApplicationCommandOption, "default_permission": boolean}} options
      */
-    async register(name, command, options) {
-        options = Object.assign({ "description": "No description provided", "category": "Miscellaneous", "man": "No man page provided", "type": "guild", "guild_id": "538380022227009562" }, options);
-        if (this.client.Modules.commands.get(name.toLowerCase())) throw new SyntaxError(`Command ${name} has already been registered`);
+    async register(id, command, options) {
+        options = Object.assign({ "description": "No description provided", "category": "Miscellaneous", "man": "No man page provided", "type": "guild", "guild_id": "538380022227009562", "options": [], "default_permission": true }, options);
         if (options.type && (options.type === "guild") && options.guild_id) {
-            this.client.interaction.createGuildApplicationCommand(this.client.Config.Bot.appID, options.guild_id, {
-                "name": name,
+            const AppCommand = await this.client.interaction.createGuildApplicationCommand(this.client.Config.Bot.appID, options.guild_id, {
+                "name": options.name,
                 "description": options.description,
-            })
-                .catch(err => console.error("Error while registering guild application command\n", err))
-                .then(() => this.client.Modules.commands.set(name.toLowerCase(), { "options": options, "command": command }));
+                "options": options.options,
+                "default_permission": options.default_permission
+            }).catch(err => console.error("Error while registering guild application command\n", err));
+            if (AppCommand) {
+                this.client.Modules.commands.set(AppCommand.id, { "options": options, "command": command });
+                return AppCommand;
+            } else return false;
         } else if (options.type === "global") {
-            this.client.interaction.createApplicationCommand(this.client.Config.Bot.appID, {
-                "name": name,
-                "description": options.description,
-            })
-                .catch(err => console.error("Error while registering application command\n", err))
-                .then(() => this.client.Modules.commands.set(name.toLowerCase(), { "options": options, "command": command }));
+            if (this.client.Modules.commands.get(id)) throw new SyntaxError(`Command ${options.name}(${id}) has already been registered`);
+            if ((!id) || id === "" || !(id.length === 18)) throw new SyntaxError(`Command ${options.name} was being registered but didn't provide an id`);
+            const AppCommand = await this.client.interaction.getApplicationCommand(this.client.Config.Bot.appID, id);
+            if (AppCommand.name === options.name) throw new Error(`Provided name for global command didn't match the one returned by discord\nProvided command: ${options.name} | Returned command: ${AppCommand.name}`);
+            this.client.Modules.commands.set(id, { "options": options, "command": command });
+            return AppCommand;
         }
-        /*if (options.aliases && options.aliases.length) {
-            for (const alias of options.aliases) {
-                if (this.client.Modules.aliases.get(alias.toLowerCase()) || this.client.Modules.commands.get(alias.toLowerCase())) throw new SyntaxError(`Alias ${alias} has already been defined`);
-                this.client.Modules.aliases.set(alias.toLowerCase(), name);
-            }
-        }*/
     }
 
-    async unregister(name) {
-        const Command = this.client.Modules.commands.get(name);
+    /**
+     * Unregister a command
+     * @param {import("@amanda/discordtypings").Snowflake} id 
+     */
+    async unregister(id) {
+        const Command = this.client.Modules.commands.get(id);
         if ((Command.options.type === "guild") && Command.options.guild_id) {
-            this.client.interaction.deleteGuildApplicationCommand(this.client.Config.Bot.appID, Command.options.guild_id, name)
+            this.client.interaction.deleteGuildApplicationCommand(this.client.Config.Bot.appID, Command.options.guild_id, id)
                 .catch(err => console.error("Error while deleting guild application command\n", err))
-                .then(() => this.client.Modules.commands.delete(name));
+                .then(() => this.client.Modules.commands.delete(id));
         } else if (Command.options.type === "global") {
-            this.client.interaction.deleteApplicationCommand(this.client.Config.Bot.appID, name)
+            this.client.interaction.deleteApplicationCommand(this.client.Config.Bot.appID, id)
                 .catch(err => console.error("Error while deleting application command\n", err))
-                .then(() => this.client.Modules.commands.delete(name));
+                .then(() => this.client.Modules.commands.delete(id));
         }
-        this.client.Modules.commands.delete(name);
     }
 };

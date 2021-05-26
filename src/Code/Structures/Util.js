@@ -28,13 +28,17 @@ module.exports = class Util {
      * @function
      */
     async loadModules() {
+        /*const AppCommands = await this.client.interaction.getApplicationCommands(this.client.Config.Bot.appID);
+        for (const Command of AppCommands) {
+            this.client.Modules.commands.set(Command.id, { "options": Command, "command":  async (Data) => this.sendErrorDetails(Data, "Associated command not registered", "Module failure") });
+        }*/
         console.warn("Code    : Remember, only load Modules you trust");
         LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json")).then((modules) => {
             for (const ManifestPath of modules) {
                 delete require.cache[ManifestPath];
                 const Manifest = require(ManifestPath);
                 if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Event ${Manifest.id} has already been loaded`);
-                const ModulePath = LocRes.Path.dirname(ManifestPath) + "/index.js";
+                const ModulePath = LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
                 delete require.cache[ModulePath];
                 const Module = new (require(ModulePath))(this.client);
                 (async () => {
@@ -45,6 +49,10 @@ module.exports = class Util {
         });
     }
 
+    /**
+     * Make the gateway execute a request
+     * @param {Object} content 
+     */
     async makeGatewayRequest(content) {
         this.client.Modules.channel.sendToQueue(this.client.Config.amqp.queueCodeGateway, JSON.stringify(content));
     }
@@ -68,6 +76,12 @@ module.exports = class Util {
         return arr;
     }
 
+    /**
+     * Makes easier sending an error with details back to the end user
+     * @param {import("@amanda/discordtypings").InteractionData} Data 
+     * @param {(Error|string)} Err 
+     * @param {string} Type 
+     */
     async sendErrorDetails(Data, Err, Type) {
         this.client.interaction.createInteractionResponse(Data.id, Data.token, {
             "type": 4, "data": {
