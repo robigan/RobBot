@@ -22,6 +22,7 @@
                 "MESSAGE_CREATE": false
             }
         },
+        "moduleRegister": false,
         "cacheUpdate": false,
         "opCodes": false,
         "command": true,

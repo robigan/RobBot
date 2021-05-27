@@ -1,5 +1,5 @@
 {
-    "id": "test",
+    "id": "com.robigan.test",
     "name": "Test suite",
     "version": "1.0.0",
     "description": "A test module for RobBot's new modular system",

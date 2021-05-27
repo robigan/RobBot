@@ -1,5 +1,5 @@
 {
-    "id": "ready",
+    "id": "com.robigan.ready",
     "name": "Ready event handler",
     "version": "1.0.0",
     "description": "Ready event handler module",

@@ -47,13 +47,10 @@ module.exports = class RobiClient extends SnowTransfer {
             structures: new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)]]),
             channel: null,
         };
-        /*this.Modules.structures.set("MessageEmbed", (require("./MessageEmbed.js")));
-        this.Modules.structures.set("Command", new (require("./Command.js"))(this));
-        this.Modules.structures.set("EventHandler", new (require("./EventHandler.js"))(this));*/
         this.Modules.structures.get("EventHandler").register("interaction_create", async (Event, Data) => {
             const command = this.Modules.commands.get(Data.data.id);
             if (!command) throw new Error("Received slash command for non existent/registered command");
-            this.debug.command ? console.log(`Author  : ${Data.member ? Data.member.user.username : Data.user.username}\nCommand : ${command.options.name}`) : undefined;
+            this.Debug.command ? console.log(`Author  : ${Data.member ? Data.member.user.username : Data.user.username}\nCommand : ${command.options.name}`) : undefined;
             command.command(Data).catch(err => {
                 console.error("Error while running command\n", err);
                 this.Utils.sendErrorDetails(Data, err, "Command failure");
@@ -73,14 +70,7 @@ module.exports = class RobiClient extends SnowTransfer {
 
         if (!Config.token) throw new Error("You must pass the token for the client");
 
-        /*if (!Config.prefix) throw new Error("You must pass a prefix for the client");
-        if (typeof Config.prefix !== "string") throw new TypeError("Prefix should be a type of String");*/
-
-        if (Config.debug) {
-            console.warn("Code    : Debug mode enabled...");
-            this.debug = Config.debug;
-        }
-        this.debug ?? false;
+        this.Debug = Config.debug ?? false;
 
         this.Config = Config;
     }
@@ -95,17 +85,17 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Cache = this.RainCache.cache;
         /*await this.Database.start();
         await this.Database.loadTypes();*/
-        console.log("Code    : Starting register process of modules");
+        this.Debug.moduleRegister ? console.log("Code    : Starting register process of modules") : undefined;
         await this.Utils.loadModules().catch((err) => {
             console.error(err);
         }).finally(() => {
-            console.log("Code    : Register process of Modules complete");
+            this.Debug.moduleRegister ? console.log("Code    : Register process of Modules complete") : undefined;
         }).catch(err => console.error("Error while loading modules\n", err));
         this.AmqpClient.initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());
             const Dispatch = async (event) => {
-                this.debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
-                this.debug.events.data && this.debug.events.data[event.t] ? console.log("data", event.d) : undefined;
+                this.Debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
+                this.Debug.events.data && this.Debug.events.data[event.t] ? console.log("data", event.d) : undefined;
                 if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
                     await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event, event.d).catch(err => {
                         console.error("Error while handling event\n", err);
@@ -114,7 +104,7 @@ module.exports = class RobiClient extends SnowTransfer {
                 }
             };
 
-            this.debug.opCodes ? console.warn(`Code    : Received op code ${ParsedEvent.op}`) : undefined;
+            this.Debug.opCodes ? console.warn(`Code    : Received op code ${ParsedEvent.op}`) : undefined;
             Dispatch(ParsedEvent).catch(err => {
                 console.error("Error while dispatching event\n", err);
                 ch.nack(event, false, true);

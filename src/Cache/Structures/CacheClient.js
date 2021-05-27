@@ -28,6 +28,5 @@ module.exports = class CacheClient extends RainCache {
     async start() {
         await this.Connector.initialize();
         await super.initialize();
-        console.log("Cache   : initialized");
     }
 };
