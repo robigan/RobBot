@@ -18,7 +18,7 @@ module.exports = class Main {
                     .setColor("YELLOW")
                     .setTimestamp()
                     .setTitle("Ping Statistics")
-                    .addField("Round Trip Message Latency", `${new Date(OrigInterRes.id / 4194304 + 1420070400000) - new Date(Data.id / 4194304 + 1420070400000)}ms`)
+                    .addField("Round Trip Message Latency", `${Date.parse(OrigInterRes.timestamp) - new Date(Data.id / 4194304 + 1420070400000)}ms`)
                 ]
             });
         };

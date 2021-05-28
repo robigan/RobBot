@@ -20,6 +20,8 @@ module.exports = class GatewayClient extends CloudStorm {
 
         super.on("error", console.error);
 
+        this.Config.debug.gateway ? super.on("debug", console.warn) : undefined;
+
         super.once("ready", async () => {
             console.log("Gateway : Logged in!");
         });

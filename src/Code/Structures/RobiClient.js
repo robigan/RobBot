@@ -45,7 +45,6 @@ module.exports = class RobiClient extends SnowTransfer {
             eventHandlers: new Map(),
             modules: new Map(),
             structures: new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)]]),
-            channel: null,
         };
         this.Modules.structures.get("EventHandler").register("interaction_create", async (Event, Data) => {
             const command = this.Modules.commands.get(Data.data.id);
@@ -112,8 +111,6 @@ module.exports = class RobiClient extends SnowTransfer {
             }).then(() => {
                 ch.ack(event);
             });
-        }).then(async ch => {
-            this.Modules.channel = ch.assertQueue(this.Config.amqp.queueCodeGateway,  { durable: false, autoDelete: true });
         });
     }
 };

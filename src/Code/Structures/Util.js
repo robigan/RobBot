@@ -46,14 +46,6 @@ module.exports = class Util {
     }
 
     /**
-     * Make the gateway execute a request
-     * @param {Object} content 
-     */
-    async makeGatewayRequest(content) {
-        this.client.Modules.channel.sendToQueue(this.client.Config.amqp.queueCodeGateway, JSON.stringify(content));
-    }
-
-    /**
      * Format an array to be cut off after maxLen, useful for formatting roles
      * @function
      * @async

@@ -24,6 +24,7 @@
         },
         "moduleRegister": false,
         "cacheUpdate": false,
+        "gateway": false,
         "opCodes": false,
         "command": true,
         "init": false
