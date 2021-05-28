@@ -13,7 +13,7 @@ const RobiClientConfig = require("../Configs/RobiClient.json");
  * @param {import("../src/amqp/AmqpClient")} AmqpClient
  * @returns {import("../src/Code/Structures/RobiClient")} RobiClient
  */
-module.exports = async (Config = Object.assign(RobiClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("./amqp/AmqpClient.js"))(MainConfig.amqp)) => {
+module.exports = async (Config = Object.assign(RobiClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("../src/amqp/AmqpClient.js"))(MainConfig.amqp)) => {
     const Code = new RobiClient(Config, AmqpClient);
     await Code.start();
     Config.debug.init ? console.log("Code    : started") : undefined;
