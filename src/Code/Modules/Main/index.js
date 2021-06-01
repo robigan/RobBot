@@ -5,11 +5,13 @@ module.exports = class Main {
      */
     constructor(client) {
         this.client = client;
+        /** @type {import("../../Structures/Command.js")} */
+        this.Command = this.client.Modules.structures.get("Command");
     }
 
     async moduleWillLoad() {
         /** @param {import("@amanda/discordtypings").InteractionData} Data */
-        const Ping = async (Data) => {
+        const Ping = async (Data, Event) => {
             await this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 5 });
             /** @type {import("@amanda/discordtypings").MessageData} */
             const OrigInterRes = await this.client.interaction.getOriginalInteractionResponse(this.client.Identify.appID, Data.token);
@@ -18,11 +20,14 @@ module.exports = class Main {
                     .setColor("YELLOW")
                     .setTimestamp()
                     .setTitle("Ping Statistics")
-                    .addField("Round Trip Message Latency", `${Date.parse(OrigInterRes.timestamp) - new Date(Data.id / 4194304 + 1420070400000)}ms`)
+                    .addField(":airplane_departure: :airplane: :airplane_arriving:", `${Date.parse(OrigInterRes.timestamp) - new Date(Data.id / 4194304 + 1420070400000)}ms`)
+                    .addField(":passport_control: Gateway PID", Event.stats.gatewayPID, true)
+                    .addField(":bullettrain_side: Cache PID", Event.stats.cachePID, true)
+                    .addField(":gear: Code PID", process.pid, true)
                 ]
             });
         };
 
-        this.client.Modules.structures.get("Command").register("847538619773485068", Ping, {"name": "ping"});
+        this.Command.register("847538619773485068", Ping, {"name": "ping"});
     }
 };

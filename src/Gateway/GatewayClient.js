@@ -38,7 +38,11 @@ module.exports = class GatewayClient extends CloudStorm {
         super.connect();
 
         super.on("event", async (event) => {
-            this.Channel.sendToQueue(this.Interface, Buffer.from(JSON.stringify(event)));
+            this.Channel.sendToQueue(this.Interface, Buffer.from(JSON.stringify(Object.assign(event, {
+                "stats": {
+                    "gatewayPID": process.pid
+                }
+            }))));
         });
     }
 };

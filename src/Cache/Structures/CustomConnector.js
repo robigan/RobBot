@@ -33,6 +33,7 @@ module.exports = class CustomConnector extends BaseConnector {
      * @param {object} event 
      */
     async send(event) {
+        event.stats.cachePID = process.pid;
         this.channel.sendToQueue(this.options.queueCacheCode, Buffer.from(JSON.stringify(event)));
     }
 };

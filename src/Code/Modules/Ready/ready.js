@@ -8,7 +8,7 @@ module.exports = class Ready {
     }
 
     async moduleWillLoad() {
-        this.client.Modules.structures.get("EventHandler").register("ready", async (event, data) => {
+        this.client.Modules.structures.get("EventHandler").register("ready", async (data) => {
             this.client.Identify.selfID = data.user.id;
             console.log("Code    : Received ready event");
         });

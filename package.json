@@ -18,7 +18,10 @@
     "eslint": "^7.27.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node index.js",
+    "gateway": "node -e \"require(\\\"./Starters/Gateway.js\\\")()\"",
+    "cache": "node -e \"require(\\\"./Starters/Cache.js\\\")()\"",
+    "code": "node -e \"require(\\\"./Starters/Code.js\\\")()\""
   },
   "keywords": [
     "discord",
