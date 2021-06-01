@@ -90,6 +90,7 @@ module.exports = class RobiClient extends SnowTransfer {
         }).finally(() => {
             this.Debug.moduleRegister ? console.log("Code    : Register process of Modules complete") : undefined;
         }).catch(err => console.error("Error while loading modules\n", err));
+        this.Identify.selfID = (await this.Cache.user.get("self")).id;
         this.AmqpClient.initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());
             const Dispatch = async (event) => {
