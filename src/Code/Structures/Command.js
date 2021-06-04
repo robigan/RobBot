@@ -17,16 +17,24 @@ module.exports = class Command {
     async register(id, command, options) {
         options = Object.assign({ "description": "No description provided", "category": "Miscellaneous", "man": "No man page provided", "type": "global", "options": [], "default_permission": true }, options);
         if (options.type && (options.type === "guild") && options.guild_id) {
-            const AppCommand = await this.client.interaction.createGuildApplicationCommand(this.client.Identify.appID, options.guild_id, {
-                "name": options.name,
-                "description": options.description,
-                "options": options.options,
-                "default_permission": options.default_permission
-            }).catch(err => console.error("Error while registering guild application command\n", err));
-            if (AppCommand) {
-                this.client.Modules.commands.set(AppCommand.id, { "options": options, "command": command });
-                return AppCommand;
-            } else return false;
+            if (this.client.Modules.commands.get(id)) throw new SyntaxError(`Command ${options.name}(${id}) has already been registered`);
+            const TestAppCommand = await this.client.interaction.getApplicationCommand(this.client.Identify.appID, id);
+            if (TestAppCommand) {
+                if (!(TestAppCommand.name === options.name)) throw new Error(`Provided name for guild command didn't match the one returned by discord\nProvided command: ${options.name} | Returned command: ${TestAppCommand.name}`);
+                this.client.Modules.commands.set(id, { "options": options, "command": command });
+                return TestAppCommand;
+            } else {
+                const AppCommand = await this.client.interaction.createGuildApplicationCommand(this.client.Identify.appID, options.guild_id, {
+                    "name": options.name,
+                    "description": options.description,
+                    "options": options.options,
+                    "default_permission": options.default_permission
+                }).catch(err => console.error("Error while registering guild application command\n", err));
+                if (AppCommand) {
+                    this.client.Modules.commands.set(AppCommand.id, { "options": options, "command": command });
+                    return AppCommand;
+                } else return false;
+            }
         } else if (options.type === "global") {
             if (this.client.Modules.commands.get(id)) throw new SyntaxError(`Command ${options.name}(${id}) has already been registered`);
             if ((!id) || id === "" || !(id.length === 18)) throw new SyntaxError(`Command ${options.name} was being registered but didn't provide an id`);

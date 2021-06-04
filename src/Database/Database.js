@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const cachegoose = require("cachegoose");
 const LocRes = new (require("../../LocationResolver.js"));
 const BaseModel = require("./BaseModel.js");
 
@@ -21,7 +20,6 @@ module.exports = class DatabaseManager {
      * @function
      */
     async start() {
-        await cachegoose(this.Mongoose);
         this.Mongoose.connect(this.Config.Mongoose.connect.url, this.Config.Mongoose.connect.options);
     }
 

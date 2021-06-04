@@ -37,8 +37,8 @@ module.exports = class RobiClient extends SnowTransfer {
             }, debug: false
         }, null, null);
 
-        /*const Database = require("../../Database/Database.js");
-        this.Database = new Database(Config);*/
+        const Database = require("../../Database/Database.js");
+        this.Database = new Database(Config);
 
         this.Modules = {
             commands: new Map(),
@@ -82,8 +82,8 @@ module.exports = class RobiClient extends SnowTransfer {
     async start() {
         await this.RainCache.initialize();
         this.Cache = this.RainCache.cache;
-        /*await this.Database.start();
-        await this.Database.loadTypes();*/
+        await this.Database.start();
+        await this.Database.loadTypes();
         this.Debug.moduleRegister ? console.log("Code    : Starting register process of modules") : undefined;
         await this.Utils.loadModules().catch((err) => {
             console.error(err);

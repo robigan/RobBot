@@ -1,8 +1,11 @@
 {
-    "id": "com.robigan.main",
+    "id": "robigan.main",
     "name": "Main suite",
     "version": "1.0.0",
     "description": "The main module that stores most of the basic functionality of RobBot, like ping commands system admin commands",
     "author": "robigan#1634",
-    "entryPath": "/index.js"
+    "entryPath": "/index.js",
+    "config": {
+
+    }
 }

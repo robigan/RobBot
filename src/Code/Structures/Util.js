@@ -36,7 +36,7 @@ module.exports = class Util {
                 if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Event ${Manifest.id} has already been loaded`);
                 const ModulePath = LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
                 delete require.cache[ModulePath];
-                const Module = new (require(ModulePath))(this.client);
+                const Module = new (require(ModulePath))(this.client, Manifest.config);
                 (async () => {
                     Module.moduleWillLoad();
                     this.client.Modules.modules.set(Manifest.id, { "manifest": Manifest, "module": Module });

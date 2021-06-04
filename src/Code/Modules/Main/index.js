@@ -3,8 +3,9 @@ module.exports = class Main {
      * @constructor
      * @param {import("../../Structures/RobiClient.js")} client
      */
-    constructor(client) {
+    constructor(client, config) {
         this.client = client;
+        this.config = config;
         /** @type {import("../../Structures/Command.js")} */
         this.Command = this.client.Modules.structures.get("Command");
     }
