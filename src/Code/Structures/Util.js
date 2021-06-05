@@ -28,10 +28,6 @@ module.exports = class Util {
      * @function
      */
     async loadModules() {
-        /*const AppCommands = await this.client.interaction.getApplicationCommands(this.client.Config.Bot.appID);
-        for (const Command of AppCommands) {
-            this.client.Modules.commands.set(Command.id, { "options": Command, "command":  async (Data) => this.sendErrorDetails(Data, "Associated command not registered", "Module failure") });
-        }*/
         console.warn("Code    : Remember, only load Modules you trust");
         LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json")).then((modules) => {
             for (const ManifestPath of modules) {
@@ -40,21 +36,13 @@ module.exports = class Util {
                 if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Event ${Manifest.id} has already been loaded`);
                 const ModulePath = LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
                 delete require.cache[ModulePath];
-                const Module = new (require(ModulePath))(this.client);
+                const Module = new (require(ModulePath))(this.client, Manifest.config);
                 (async () => {
                     Module.moduleWillLoad();
                     this.client.Modules.modules.set(Manifest.id, { "manifest": Manifest, "module": Module });
                 })().catch(err => console.error("Error while loading modules\n", err));
             }
         });
-    }
-
-    /**
-     * Make the gateway execute a request
-     * @param {Object} content 
-     */
-    async makeGatewayRequest(content) {
-        this.client.Modules.channel.sendToQueue(this.client.Config.amqp.queueCodeGateway, JSON.stringify(content));
     }
 
     /**

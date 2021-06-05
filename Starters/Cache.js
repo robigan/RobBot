@@ -13,7 +13,7 @@ const CacheClientConfig = require("../Configs/CacheClient.json");
  * @param {import("../src/amqp/AmqpClient")} AmqpClient
  * @returns {import("../src/Cache/Structures/CacheClient")} CacheClient
  */
-module.exports = async (Config = Object.assign(CacheClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("../amqp/AmqpClient.js"))(MainConfig.amqp)/*, LocResProvided = require("./LocationResolver.js")*/) => {
+module.exports = async (Config = Object.assign(CacheClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("../src/amqp/AmqpClient.js"))(MainConfig.amqp)/*, LocResProvided = require("./LocationResolver.js")*/) => {
     //global.LocRes = LocResProvided;
     const Cache = new CacheClient(Config, AmqpClient);
     Cache.start();

@@ -20,6 +20,8 @@ module.exports = class GatewayClient extends CloudStorm {
 
         super.on("error", console.error);
 
+        this.Config.debug.gateway ? super.on("debug", console.warn) : undefined;
+
         super.once("ready", async () => {
             console.log("Gateway : Logged in!");
         });
@@ -36,7 +38,11 @@ module.exports = class GatewayClient extends CloudStorm {
         super.connect();
 
         super.on("event", async (event) => {
-            this.Channel.sendToQueue(this.Interface, Buffer.from(JSON.stringify(event)));
+            this.Channel.sendToQueue(this.Interface, Buffer.from(JSON.stringify(Object.assign(event, {
+                "stats": {
+                    "gatewayPID": process.pid
+                }
+            }))));
         });
     }
 };

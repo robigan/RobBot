@@ -1,0 +1,11 @@
+{
+    "id": "robigan.issues",
+    "name": "Issues module",
+    "version": "1.0.0",
+    "description": "A module similar to CarlBot's suggestion system but inspired from GitHub issues",
+    "author": "robigan#1634",
+    "entryPath": "/issues.js",
+    "config": {
+        "issuesChannel": "849743735147593758"
+    }
+}

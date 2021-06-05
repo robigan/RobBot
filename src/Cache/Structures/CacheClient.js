@@ -16,7 +16,7 @@ module.exports = class CacheClient extends RainCache {
 
         const Connector = new CustomConnector(AmqpClient, Config.amqp);
         super(Config.RainCache, Connector, Connector);
-        super.on("debug", console.log);
+        Config.debug.cache ? super.on("debug", console.warn) : undefined;
         this.Connector = Connector;
     }
 
@@ -28,6 +28,5 @@ module.exports = class CacheClient extends RainCache {
     async start() {
         await this.Connector.initialize();
         await super.initialize();
-        console.log("Cache   : initialized");
     }
 };

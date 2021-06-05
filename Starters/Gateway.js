@@ -13,7 +13,7 @@ const GatewayClientConfig = require("../Configs/GatewayClient.json");
  * @param {import("../src/amqp/AmqpClient")} AmqpClient
  * @returns {import("../src/Gateway/GatewayClient")} GatewayClient
  */
-module.exports = async (Config = Object.assign(GatewayClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("./amqp/AmqpClient.js"))(MainConfig.amqp)/*, LocResProvided = require("./LocationResolver.js")*/) => {
+module.exports = async (Config = Object.assign(GatewayClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("../src/amqp/AmqpClient.js"))(MainConfig.amqp)/*, LocResProvided = require("./LocationResolver.js")*/) => {
     //global.LocRes = LocResProvided;
     const Gateway = new GatewayClient(Config, AmqpClient);
     Gateway.start();
