@@ -46,7 +46,7 @@ module.exports = class Main {
             const IssuesChannel = await this.client.Database.Types.get("guilds").model.findById(Data.guild_id).lean().then(doc => {
                 if (doc.configStore.issues && doc.configStore.issues.issuesChannel) return doc.configStore.issues.issuesChannel;
                 else {
-                    this.client.Utils.sendErrorDetails(Data, new Error("Make sure to set an issues channel before using issues"), "Missing data when returned by Database");
+                    this.client.Utils.sendErrorDetails(Data, new Error("Make sure to set an issues channel before using issues using \"/issues config channel: {channelID}\""), "Missing data returned by Database");
                     return false;
                 }
             });
