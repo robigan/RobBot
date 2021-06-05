@@ -73,7 +73,14 @@ module.exports = class Util {
     async sendErrorDetails(Data, Err, Type) {
         this.client.interaction.createInteractionResponse(Data.id, Data.token, {
             "type": 4, "data": {
-                "content": `Error while processing the slash interaction.\nError type: ${Type}\nError details: ${Err.toString()}`,
+                "embeds": [
+                    new (this.client.Modules.structures.get("MessageEmbed"))()
+                        .setTitle("Error while processing the slash interaction")
+                        .addField("Error Type", Type)
+                        .addField("Error Details", Err.toString())
+                        .setTimestamp()
+                        .setColor("RED")
+                ],
                 "flags": 64
             }
         }, );
