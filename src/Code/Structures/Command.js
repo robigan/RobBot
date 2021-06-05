@@ -18,7 +18,7 @@ module.exports = class Command {
         options = Object.assign({ "description": "No description provided", "category": "Miscellaneous", "man": "No man page provided", "type": "global", "options": [], "default_permission": true }, options);
         if (options.type && (options.type === "guild") && options.guild_id) {
             if (this.client.Modules.commands.get(id)) throw new SyntaxError(`Command ${options.name}(${id}) has already been registered`);
-            const TestAppCommand = await this.client.interaction.getApplicationCommand(this.client.Identify.appID, id);
+            const TestAppCommand = await this.client.interaction.getApplicationCommand(this.client.Identify.appID, id).catch(async (err) => console.error("A command was being registered for a non existent command", err));
             if (TestAppCommand) {
                 if (!(TestAppCommand.name === options.name)) throw new Error(`Provided name for guild command didn't match the one returned by discord\nProvided command: ${options.name} | Returned command: ${TestAppCommand.name}`);
                 this.client.Modules.commands.set(id, { "options": options, "command": command });
@@ -38,7 +38,7 @@ module.exports = class Command {
         } else if (options.type === "global") {
             if (this.client.Modules.commands.get(id)) throw new SyntaxError(`Command ${options.name}(${id}) has already been registered`);
             if ((!id) || id === "" || !(id.length === 18)) throw new SyntaxError(`Command ${options.name} was being registered but didn't provide an id`);
-            const AppCommand = await this.client.interaction.getApplicationCommand(this.client.Identify.appID, id);
+            const AppCommand = await this.client.interaction.getApplicationCommand(this.client.Identify.appID, id).catch(async (err) => console.error("A command was being registered for a non existent command", err));
             if (!(AppCommand.name === options.name)) throw new Error(`Provided name for global command didn't match the one returned by discord\nProvided command: ${options.name} | Returned command: ${AppCommand.name}`);
             this.client.Modules.commands.set(id, { "options": options, "command": command });
             return AppCommand;
