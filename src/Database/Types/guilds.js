@@ -5,14 +5,18 @@ module.exports = class guilds extends BaseModel {
         super(database, "guilds");
         this.schema = new this.database.Mongoose.Schema({
             id: String,
-            dataStore: Object,
-            configStore: Object,
+            dataStore: {},
+            configStore: {},
             _id: String
         }, {
-            collection: this.name
+            collection: this.name,
+            minimize: false,
+            strict: false
         });
         this.schema.pre("save", async function() {
             this._id = this.id;
+            this.dataStore = {};
+            this.configStore = {};
         });
 
         const ifNotExistThenUpdate = async function(result) {
