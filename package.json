@@ -1,6 +1,6 @@
 {
   "name": "robbot",
-  "version": "0.3.1",
+  "version": "0.6.",
   "description": "Robigan's discord bot",
   "main": "index.js",
   "dependencies": {

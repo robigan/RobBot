@@ -21,10 +21,8 @@ module.exports = class Main {
         const Issues = async (Data) => {
             if (Data.data.options[0].name === "config") {
                 if ((Data.data.options[0].options) && Data.data.options[0].options[0].name === "channel") {
-                    this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Updating issues channel configuration" } }).then(() => {
-                        setTimeout(async () => this.client.interaction.deleteOriginalInteractionResponse(this.client.Identify.appID, Data.token), 5000);
-                    });
-                    await this.client.Database.Types.get("guilds").model.findByIdAndUpdate(Data.guild_id, { "configStore": { "issues": { "issuesChannel": Data.data.options[0].options[0].value } } });
+                    this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Updating issues channel configuration", "flags": 64 } });
+                    await this.client.Database.Types.get("guilds").model.updateOne({"_id": Data.guild_id}, { "configStore": { "issues": { "issuesChannel": Data.data.options[0].options[0].value } } });
                 } else {
                     await this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 5 });
                     this.client.interaction.editOriginalInteractionResponse(this.client.Identify.appID, Data.token, {
@@ -52,9 +50,7 @@ module.exports = class Main {
             });
             if (!IssuesChannel) return;
             if (Data.data.options[0].name === "create") {
-                this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Ok! Sent your issue" } }).then(() => {
-                    setTimeout(async () => this.client.interaction.deleteOriginalInteractionResponse(this.client.Identify.appID, Data.token), 5000);
-                });
+                this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Ok! Sent your issue", "flags": 64 } });
                 this.client.channel.createMessage(IssuesChannel, {
                     "embed": new (this.client.Modules.structures.get("MessageEmbed"))()
                         .setColor("ORANGE")
@@ -69,9 +65,7 @@ module.exports = class Main {
                 });
             }
             else if (Data.data.options[0].name === "reply") {
-                this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": `The subcommand was delete! With value ${Data.data.options[0].value}` } }).then(() => {
-                    setTimeout(async () => this.client.interaction.deleteOriginalInteractionResponse(this.client.Identify.appID, Data.token), 5000);
-                });
+                this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": `The subcommand was delete! With value ${Data.data.options[0].value}`, "flags": 64 } });
                 const OrigInterRes = await this.client.channel.getChannelMessage(IssuesChannel, Data.data.options[0].options[0].value);
                 const Embed = new (this.client.Modules.structures.get("MessageEmbed"))(OrigInterRes.embeds[0]);
                 Embed.fields[3].value = Data.data.options[0].options[1].value;
@@ -79,9 +73,7 @@ module.exports = class Main {
                 this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embed": Embed, "content": OrigInterRes.content });
             }
             else if (Data.data.options[0].name === "mark") {
-                this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Ok, modifying state" } }).then(() => {
-                    setTimeout(async () => this.client.interaction.deleteOriginalInteractionResponse(this.client.Identify.appID, Data.token), 5000);
-                });
+                this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Ok, modifying state", "flags": 64 } });
                 const OrigInterRes = await this.client.channel.getChannelMessage(IssuesChannel, Data.data.options[0].options[0].value);
                 const Embed = new (this.client.Modules.structures.get("MessageEmbed"))(OrigInterRes.embeds[0]);
                 Embed.fields[2].value = Data.data.options[0].options[1].value;
