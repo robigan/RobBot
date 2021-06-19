@@ -85,4 +85,11 @@ module.exports = class Util {
             }
         }, );
     }
+
+    // eslint-disable-next-line no-unused-vars
+    async checkPerms(userID, guildID, channelID, roleID) {
+        if (!userID || !guildID) throw new TypeError("Provide a userID and/or guildID when checking for perms");
+        return;
+        //this.client.Cache.permOverwrite;
+    }
 };
