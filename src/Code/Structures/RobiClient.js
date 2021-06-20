@@ -44,7 +44,7 @@ module.exports = class RobiClient extends SnowTransfer {
             commands: new Map(),
             eventHandlers: new Map(),
             modules: new Map(),
-            /** @type {Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)], ["Utils", new (require("./Util.js"))(this)]])} */
+            /** @type {Map<String, Object>} */
             structures: new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)], ["Utils", new (require("./Util.js"))(this)]]),
         };
         this.Modules.structures.get("EventHandler").register("interaction_create", async (Data, Event) => {

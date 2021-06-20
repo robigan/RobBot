@@ -68,6 +68,7 @@ module.exports = class Main {
                 });
             }
             else if (Data.data.options[0].name === "reply") {
+                if (this.client.Modules.structures.get("Utils").checkPerms(Data.member.user.id, Data.guild_id, undefined, undefined, BigInt(1 << 13))) return;
                 this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": `The subcommand was delete! With value ${Data.data.options[0].value}`, "flags": 64 } });
                 const OrigInterRes = await this.client.channel.getChannelMessage(IssuesChannel, Data.data.options[0].options[0].value);
                 const Embed = new (this.client.Modules.structures.get("MessageEmbed"))(OrigInterRes.embeds[0]);
