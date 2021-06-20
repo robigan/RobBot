@@ -108,9 +108,13 @@ module.exports = class Util {
             const RolePerm = BigInt(Role.boundObject.permissions);
             return BigInt(RolePerm & TargetPerm) === BigInt(0) ? false : true;
         } else if (!roleID && channelID) {
+            // eslint-disable-next-line no-unused-vars
             const Member = await this.client.Cache.member.get(userID, guildID);
-            const Channel = await this.client.Cache.permOverwrite.get();
-            return false;
+            const Channel = await this.client.Cache.permOverwrite.getIndexMembers(guildID);
+            Channel.every(async value => {
+                const Override = await this.client.Cache.permOverwrite.get(value, channelID);
+                Override.boundObject;
+            });
         } else if (!roleID && !channelID) { // Incase if channelID and roleID were not specified
             const Member = await this.client.Cache.member.get(userID, guildID);
             if ((Member === null)) return false, "Data requested not cached";
