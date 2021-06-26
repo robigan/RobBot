@@ -74,7 +74,7 @@ module.exports = class Util {
         this.client.interaction.createInteractionResponse(Data.id, Data.token, {
             "type": 4, "data": {
                 "embeds": [
-                    new (this.client.Modules.structures.get("MessageEmbed"))()
+                    new (this.client.Struct.get("MessageEmbed"))()
                         .setTitle("Error while processing the slash interaction")
                         .addField("Error Type", Type)
                         .addField("Error Details", Err.toString())

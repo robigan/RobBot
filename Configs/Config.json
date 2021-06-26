@@ -16,17 +16,18 @@
     },
     "debug": {
         "events": {
-            "type": false,
+            "type": true,
             "data": {
                 "READY": false,
-                "MESSAGE_CREATE": false
+                "MESSAGE_CREATE": false,
+                "INTERACTION_CREATE": true
             }
         },
-        "moduleRegister": false,
-        "cache": false,
+        "moduleRegister": true,
+        "cache": true,
         "gateway": false,
         "opCodes": false,
         "command": true,
-        "init": false
+        "init": true
     }
 }

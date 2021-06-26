@@ -7,7 +7,7 @@ module.exports = class Main {
         this.client = client;
         this.config = config;
         /** @type {import("../../Structures/Command.js")} */
-        this.Command = this.client.Modules.structures.get("Command");
+        this.Command = this.client.Struct.get("Command");
     }
 
     async moduleWillLoad() {
@@ -17,7 +17,7 @@ module.exports = class Main {
             /** @type {import("@amanda/discordtypings").MessageData} */
             const OrigInterRes = await this.client.interaction.getOriginalInteractionResponse(this.client.Identify.appID, Data.token);
             this.client.interaction.editOriginalInteractionResponse(this.client.Identify.appID, Data.token, {
-                "embeds": [new (this.client.Modules.structures.get("MessageEmbed"))()
+                "embeds": [new (this.client.Struct.get("MessageEmbed"))()
                     .setColor("YELLOW")
                     .setTimestamp()
                     .setTitle("Ping Statistics")
