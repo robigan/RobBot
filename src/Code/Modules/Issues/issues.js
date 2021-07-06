@@ -55,18 +55,29 @@ module.exports = class Main {
             if (Data.data.options[0].name === "create") {
                 this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Ok! Sent your issue", "flags": 64 } });
 
+                let AttachmentsURL = "";
+                Data.message.attachments.forEach(value => {
+                    AttachmentsURL += `${value.filename} (${value.proxy_url})\n`;
+                });
+
                 this.client.channel.createMessage(IssuesChannel, {
-                    "embed": new (this.client.Struct.get("MessageEmbed"))()
-                        .setColor("ORANGE")
-                        .setTimestamp()
-                        .setFooter("Bug ID is Message ID") // To modify
-                        .setAuthor(`${Data.member.user.username}#${Data.member.user.discriminator} (${Data.member.user.id})`)
-                        .addField(Data.data.options[0].options[0].value, Data.data.options[0].options[1].value)
-                        .addField("Files", "_No files attached_")
-                        .addField("Status:", "Under Review", true)
-                        .addField("Reason", "_No response currently_", true)
-                        .setTitle("RobBot Issues"), // To modify
+                    "embeds": [
+                        new (this.client.Struct.get("MessageEmbed"))()
+                            .setColor("ORANGE")
+                            .setTimestamp()
+                            .setFooter("Bug ID is Message ID") // To modify
+                            .setAuthor(`${Data.member.user.username}#${Data.member.user.discriminator} (${Data.member.user.id})`)
+                            .addField(Data.data.options[0].options[0].value, Data.data.options[0].options[1].value)
+                            .addField("Files", AttachmentsURL === "" ? "_No files attached_" : AttachmentsURL)
+                            .addField("Status:", "Under Review", true)
+                            .addField("Reason", "_No response currently_", true)
+                            .setTitle("RobBot Issues")], // To modify
                     "content": `:bug: From: <#${Data.channel_id}>`
+                }).then(async (Data) => {
+                    const Embed = Object.assign({}, Data.embeds[0]);
+                    Embed.footer.text = `Bug ID: ${Data.id}`;
+
+                    this.client.channel.editMessage(IssuesChannel, Data.id, { "embeds": [ Embed ], "content": Data.content });
                 });
             }
             else if (Data.data.options[0].name === "reply") {
@@ -79,7 +90,7 @@ module.exports = class Main {
                 const Embed = new (this.client.Struct.get("MessageEmbed"))(IssueMessage.embeds[0]);
                 Embed.fields[3].value = Data.data.options[0].options[1].value;
 
-                this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embed": Embed, "content": IssueMessage.content });
+                this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embeds": [ Embed ], "content": IssueMessage.content });
 
                 this.dmUpdate(Embed, `Your issue ${Embed.fields[0].name} was replied to with: ${Data.data.options[0].options[1].value}`);
             }
@@ -94,7 +105,7 @@ module.exports = class Main {
                 Embed.fields[2].value = Data.data.options[0].options[1].value;
                 Embed.setColor(this.Colors[Data.data.options[0].options[1].value]);
 
-                this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embed": Embed, "content": IssueMessage.content });
+                this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embeds": [ Embed ], "content": IssueMessage.content });
 
                 this.dmUpdate(Embed, `Your issue ${Embed.fields[0].name} was marked: ${Data.data.options[0].options[1].value}`);
             }

@@ -13,8 +13,6 @@ module.exports = class RobiClient extends SnowTransfer {
         super(Config.token, Config.SnowTransfer);
         this.validate(Config);
 
-        //this.AmqpClient = AmqpClient;
-
         this.Identify = {
             "ownerBot": Config.Bot.owner,
             "appID": Config.Bot.appID,
@@ -33,9 +31,16 @@ module.exports = class RobiClient extends SnowTransfer {
             eventHandlers: new Map(),
             modules: new Map(),
         };
-
         /** @type {Map<String, Object>} */
-        this.Struct = new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)], ["Utils", new (require("./Util.js"))(this)], ["Database", new (require("../../Database/Database.js"))(Config)], ["AmqpClient", AmqpClient], ["RainCache", new RainCache(RainCacheConfig.RainCache, null, null)]]);
+        this.Struct = new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)], ["Utils", new (require("./Util.js"))(this)], ["Database", new (require("../../Database/Database.js"))(Config)], ["AmqpClient", AmqpClient], ["RainCache", new RainCache({
+            storage: {
+                default: new RainCache.Engines.RedisStorageEngine({
+                    redisOptions: {
+                        host: "localhost"
+                    }
+                })
+            }, debug: false
+        }, null, null)]]);
 
         /** @type {import("../../Database/Database.js")} */
         this.Database = this.Struct.get("Database");

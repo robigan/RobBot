@@ -8,7 +8,9 @@
             "type": "redis",
             "engineType": "default",
             "options": {
-                "host": "localhost"
+                "redisOptions": {
+                    "host": "localhost"
+                }
             }
         }
     ]
