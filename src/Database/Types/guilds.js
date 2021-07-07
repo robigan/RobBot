@@ -14,23 +14,30 @@ module.exports = class guilds extends BaseModel {
             strict: false
         });
         this.schema.pre("save", async function() {
-            this._id = this.id;
-            this.dataStore = {};
-            this.configStore = {};
+            if (this._id && !this.id) {
+                this.id = this._id;
+            } else if (!this._id && this.id) {
+                this._id = this.id;
+            } else if (this._id && this.id && (this._id !== this.id)) {
+                throw new Error("this._id and this.id do not match!");
+            }
+            this.dataStore ? undefined : this.dataStore = {};
+            this.configStore ? undefined : this.configStore = {};
         });
 
-        const ifNotExistThenUpdate = async function(result) {
-            if (!result) {
-                const MyNewModel = new this.model({id: this.getQuery()});
+        const ifNotExistOneThenCreate = async function(result) {
+            const Filter = this.getFilter();
+            if (!result || (result.n === 0 && result.nModified === 0) && Filter._id) {
+                const getUpdate = this.getUpdate();
+                const MyNewModel = new this.model(Object.assign(Filter, getUpdate ? getUpdate.$set : {}));
                 await MyNewModel.save();
             }
         };
-        this.schema.post("find", ifNotExistThenUpdate);
-        this.schema.post("findOne", ifNotExistThenUpdate);
-        this.schema.post("findOneAndUpdate", ifNotExistThenUpdate);
-        this.schema.post("update", ifNotExistThenUpdate);
-        this.schema.post("updateOne", ifNotExistThenUpdate);
-        this.schema.post("updateMany", ifNotExistThenUpdate);
+        //this.schema.post("find", ifNotExistThenUpdate);
+        this.schema.post("findOne", ifNotExistOneThenCreate);
+        this.schema.post("findOneAndUpdate", ifNotExistOneThenCreate);
+        this.schema.post("updateOne", ifNotExistOneThenCreate);
+        this.schema.post("updateMany", ifNotExistOneThenCreate);
         this.model = this.database.Mongoose.model(this.name, this.schema);
     }
 };

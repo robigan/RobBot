@@ -9,12 +9,12 @@ module.exports = class Test {
 
     async moduleWillLoad() {
         /** @type {import("@amanda/discordtypings").ApplicationCommand} */
-        this.AppCommand = this.client.Modules.structures.get("Command").register("846097331518439485", async (Data) => {
+        this.AppCommand = this.client.Struct.get("Command").register("846097331518439485", async (Data) => {
             this.client.interaction.createInteractionResponse(Data.id, Data.token, {"type": 4, "data": {"content": "Hello World!"}});
         }, {"name": "test"});
     }
 
     async moduleWillUnload() {
-        this.client.Modules.structures.get("Command").unregister(this.AppCommand.id);
+        this.client.Struct.get("Command").unregister(this.AppCommand.id);
     }
 };

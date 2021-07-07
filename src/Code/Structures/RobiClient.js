@@ -1,6 +1,6 @@
 const SnowTransfer = require("snowtransfer");
 const RainCache = require("raincache");
-const Util = require("./Util.js");
+//const Util = require("./Util.js");
 
 module.exports = class RobiClient extends SnowTransfer {
     /**
@@ -12,8 +12,6 @@ module.exports = class RobiClient extends SnowTransfer {
     constructor(Config = {}, AmqpClient) {
         super(Config.token, Config.SnowTransfer);
         this.validate(Config);
-
-        this.AmqpClient = AmqpClient;
 
         this.Identify = {
             "ownerBot": Config.Bot.owner,
@@ -27,7 +25,14 @@ module.exports = class RobiClient extends SnowTransfer {
             if (!(Unit.type === "redis")) return;
             RainCacheConfig.RainCache.storage[Unit.engineType] = new RainCache.Engines.RedisStorageEngine(Unit.options);
         });
-        this.RainCache = new RainCache({
+
+        this.Modules = {
+            commands: new Map(),
+            eventHandlers: new Map(),
+            modules: new Map(),
+        };
+        /** @type {Map<String, Object>} */
+        this.Struct = new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)], ["Utils", new (require("./Util.js"))(this)], ["Database", new (require("../../Database/Database.js"))(Config)], ["AmqpClient", AmqpClient], ["RainCache", new RainCache({
             storage: {
                 default: new RainCache.Engines.RedisStorageEngine({
                     redisOptions: {
@@ -35,28 +40,24 @@ module.exports = class RobiClient extends SnowTransfer {
                     }
                 })
             }, debug: false
-        }, null, null);
+        }, null, null)]]);
 
-        const Database = require("../../Database/Database.js");
-        this.Database = new Database(Config);
+        /** @type {import("../../Database/Database.js")} */
+        this.Database = this.Struct.get("Database");
+        /** @type {import("../../amqp/AmqpClient.js")} */
+        this.AmqpClient = this.Struct.get("AmqpClient");
+        /** @type {RainCache} */
+        this.RainCache = this.Struct.get("RainCache");
 
-        this.Modules = {
-            commands: new Map(),
-            eventHandlers: new Map(),
-            modules: new Map(),
-            structures: new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)]]),
-        };
-        this.Modules.structures.get("EventHandler").register("interaction_create", async (Data, Event) => {
+        this.Struct.get("EventHandler").register("interaction_create", async (Data, Event) => {
             const command = this.Modules.commands.get(Data.data.id);
             if (!command) throw new Error("Received slash command for non existent/registered command");
             this.Debug.command ? console.log(`Author  : ${Data.member ? Data.member.user.username : Data.user.username}\nCommand : ${command.options.name}`) : undefined;
             command.command(Data, Event).catch(err => {
                 console.error("Error while running command\n", err);
-                this.Utils.sendErrorDetails(Data, err, "Command failure");
+                this.Struct.get("Utils").sendErrorDetails(Data, err, "Command failure");
             });
         });
-
-        this.Utils = new Util(this);
     }
 
     /**
@@ -85,13 +86,13 @@ module.exports = class RobiClient extends SnowTransfer {
         await this.Database.start();
         await this.Database.loadTypes();
         this.Debug.moduleRegister ? console.log("Code    : Starting register process of modules") : undefined;
-        await this.Utils.loadModules().catch((err) => {
+        await this.Struct.get("Utils").loadModules().catch((err) => {
             console.error(err);
         }).finally(() => {
             this.Debug.moduleRegister ? console.log("Code    : Register process of Modules complete") : undefined;
         }).catch(err => console.error("Error while loading modules\n", err));
         this.Identify.selfID = (await this.Cache.user.get("self")).id;
-        this.AmqpClient.initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
+        this.Struct.get("AmqpClient").initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());
             const Dispatch = async (event) => {
                 this.Debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
@@ -99,7 +100,7 @@ module.exports = class RobiClient extends SnowTransfer {
                 if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
                     await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event.d, event).catch(err => {
                         console.error("Error while handling event\n", err);
-                        this.Utils.sendErrorDetails(event.d, err, "Handler failure");
+                        this.Struct.get("Utils").sendErrorDetails(event.d, err, "Handler failure");
                     });
                 }
             };
