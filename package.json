@@ -6,16 +6,15 @@
   "dependencies": {
     "@amanda/discordtypings": "github:AmandaDiscord/DiscordTypings#bd43c3a022981d414a0aada92ddced1574c9aeab",
     "amqplib-plus": "^1.0.9",
-    "cachegoose": "^8.0.0",
-    "cloudstorm": "github:AmandaDiscord/CloudStorm#507e905c45f17a7c89a614d50d91f51ecbab4721",
+    "cloudstorm": "github:AmandaDiscord/CloudStorm#1c661cf0fefa0ec7baa89d5bcb112d342f1c150d",
     "glob-promise": "^4.2.0",
-    "mongoose": "^5.12.14",
+    "mongoose": "^5.13.2",
     "ms": "^2.1.3",
     "raincache": "github:AmandaDiscord/RainCache#8f510448ed1d900a0a85e4345fbc5288a19c82ab",
     "snowtransfer": "github:AmandaDiscord/SnowTransfer#d0e8f0f4f5124ac061a681dd3a954b5e25206031"
   },
   "devDependencies": {
-    "eslint": "^7.29.0"
+    "eslint": "^7.30.0"
   },
   "scripts": {
     "test": "node index.js",

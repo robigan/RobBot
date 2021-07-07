@@ -31,8 +31,16 @@ module.exports = class RobiClient extends SnowTransfer {
             eventHandlers: new Map(),
             modules: new Map(),
         };
+
         /** @type {Map<String, Object>} */
-        this.Struct = new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)], ["Utils", new (require("./Util.js"))(this)], ["Database", new (require("../../Database/Database.js"))(Config)], ["AmqpClient", AmqpClient], ["RainCache", new RainCache({
+        this.Struct = new Map();
+        this.Struct.set("MessageEmbed", require("./MessageEmbed.js"));
+        this.Struct.set("Command", new (require("./Command.js"))(this));
+        this.Struct.set("EventHandler", new (require("./EventHandler.js"))(this));
+        this.Struct.set("Utils", new (require("./Util.js"))(this));
+        this.Struct.set("Database", new (require("../../Database/Database.js"))(Config));
+        this.Struct.set("AmqpClient", AmqpClient);
+        this.Struct.set("RainCache", new RainCache({
             storage: {
                 default: new RainCache.Engines.RedisStorageEngine({
                     redisOptions: {
@@ -40,7 +48,8 @@ module.exports = class RobiClient extends SnowTransfer {
                     }
                 })
             }, debug: false
-        }, null, null)]]);
+        }, null, null));
+        this.Struct.set("IntPi", new (require("./InteractionPipeline.js"))(this));
 
         /** @type {import("../../Database/Database.js")} */
         this.Database = this.Struct.get("Database");
@@ -49,7 +58,7 @@ module.exports = class RobiClient extends SnowTransfer {
         /** @type {RainCache} */
         this.RainCache = this.Struct.get("RainCache");
 
-        this.Struct.get("EventHandler").register("interaction_create", async (Data, Event) => {
+        /*this.Struct.get("EventHandler").register("interaction_create", async (Data, Event) => {
             const command = this.Modules.commands.get(Data.data.id);
             if (!command) throw new Error("Received slash command for non existent/registered command");
             this.Debug.command ? console.log(`Author  : ${Data.member ? Data.member.user.username : Data.user.username}\nCommand : ${command.options.name}`) : undefined;
@@ -57,7 +66,7 @@ module.exports = class RobiClient extends SnowTransfer {
                 console.error("Error while running command\n", err);
                 this.Struct.get("Utils").sendErrorDetails(Data, err, "Command failure");
             });
-        });
+        });*/
     }
 
     /**
