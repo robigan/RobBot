@@ -12,7 +12,7 @@ module.exports = class InteractionPipeline {
             this.client.Debug.command ? console.log(`Author  : ${Data.member ? Data.member.user.username : Data.user.username}\nCommand : ${command.options.name}`) : undefined;
             command.command(Data, Event).catch(err => {
                 console.error("Error while running command\n", err);
-                this.Struct.get("Utils").sendErrorDetails(Data, err, "Command failure");
+                this.sendErrorDetails(Data, err, "Command failure");
             });
         });
     }
@@ -79,5 +79,25 @@ module.exports = class InteractionPipeline {
         }
     }
 
-
+    /**
+     * Makes easier sending an error with details back to the end user
+     * @param {import("@amanda/discordtypings").InteractionData} Data 
+     * @param {(Error|string)} Err 
+     * @param {string} Type 
+     */
+    async sendErrorDetails(Data, Err, Type) {
+        this.client.interaction.createInteractionResponse(Data.id, Data.token, {
+            "type": 4, "data": {
+                "embeds": [
+                    new (this.client.Struct.get("MessageEmbed"))()
+                        .setTitle("Error while processing the slash interaction")
+                        .addField("Error Type", Type)
+                        .addField("Error Details", Err.toString())
+                        .setTimestamp()
+                        .setColor("RED")
+                ],
+                "flags": 64
+            }
+        });
+    }
 };

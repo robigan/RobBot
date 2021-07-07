@@ -6,8 +6,8 @@ module.exports = class Main {
     constructor(client, config) {
         this.client = client;
         this.config = config;
-        /** @type {import("../../Structures/Command.js")} */
-        this.Command = this.client.Struct.get("Command");
+        /** @type {import("../../Structures/InteractionPipeline.js")} */
+        this.IntPi = this.client.Struct.get("IntPi");
         this.Colors = {
             "Under Review": "ORANGE",
             "Accepted": "GREEN",
@@ -19,7 +19,7 @@ module.exports = class Main {
     async moduleWillLoad() {
         /** @param {import("@amanda/discordtypings").InteractionData} Data */
         const Issues = async (Data) => {
-            if (!Data.guild_id) { this.client.Struct.get("Utils").sendErrorDetails(Data, new TypeError("Please execute this in a guild"), "Guild Verification failure"); return; }
+            if (!Data.guild_id) { this.IntPi.sendErrorDetails(Data, new TypeError("Please execute this in a guild"), "Guild Verification failure"); return; }
             if (Data.data.options[0].name === "config") {
                 if ((Data.data.options[0].options) && Data.data.options[0].options[0].name === "channel") {
                     this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Updating issues channel configuration", "flags": 64 } });
@@ -46,7 +46,7 @@ module.exports = class Main {
             const IssuesChannel = await this.client.Database.Types.get("guilds").model.findById(Data.guild_id).lean().then(doc => {
                 if (doc.configStore.issues && doc.configStore.issues.issuesChannel) return doc.configStore.issues.issuesChannel;
                 else {
-                    this.client.Struct.get("Utils").sendErrorDetails(Data, new Error("Make sure to set an issues channel before using issues using \"/issues config channel: {channelID}\""), "Missing Data in Database");
+                    this.IntPi.sendErrorDetails(Data, new Error("Make sure to set an issues channel before using issues using \"/issues config channel: {channelID}\""), "Missing Data in Database");
                     return false;
                 }
             });
@@ -54,11 +54,6 @@ module.exports = class Main {
 
             if (Data.data.options[0].name === "create") {
                 this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Ok! Sent your issue", "flags": 64 } });
-
-                let AttachmentsURL = "";
-                Data.message.attachments.forEach(value => {
-                    AttachmentsURL += `${value.filename} (${value.proxy_url})\n`;
-                });
 
                 this.client.channel.createMessage(IssuesChannel, {
                     "embeds": [
@@ -68,7 +63,7 @@ module.exports = class Main {
                             .setFooter("Bug ID is Message ID") // To modify
                             .setAuthor(`${Data.member.user.username}#${Data.member.user.discriminator} (${Data.member.user.id})`)
                             .addField(Data.data.options[0].options[0].value, Data.data.options[0].options[1].value)
-                            .addField("Files", AttachmentsURL === "" ? "_No files attached_" : AttachmentsURL)
+                            .addField("Files", "_No files attached_\n\n***Note this feature is currently disabled and only present for backwards compatability***")
                             .addField("Status:", "Under Review", true)
                             .addField("Reason", "_No response currently_", true)
                             .setTitle("RobBot Issues")], // To modify
@@ -88,6 +83,7 @@ module.exports = class Main {
                 const IssueMessage = await this.client.channel.getChannelMessage(IssuesChannel, Data.data.options[0].options[0].value);
 
                 const Embed = new (this.client.Struct.get("MessageEmbed"))(IssueMessage.embeds[0]);
+                if (!(Embed.title === "RobBot Issues")) return;
                 Embed.fields[3].value = Data.data.options[0].options[1].value;
 
                 this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embeds": [ Embed ], "content": IssueMessage.content });
@@ -102,6 +98,7 @@ module.exports = class Main {
                 const IssueMessage = await this.client.channel.getChannelMessage(IssuesChannel, Data.data.options[0].options[0].value);
 
                 const Embed = new (this.client.Struct.get("MessageEmbed"))(IssueMessage.embeds[0]);
+                if (!(Embed.title === "RobBot Issues")) return;
                 Embed.fields[2].value = Data.data.options[0].options[1].value;
                 Embed.setColor(this.Colors[Data.data.options[0].options[1].value]);
 
@@ -110,7 +107,7 @@ module.exports = class Main {
                 this.dmUpdate(Embed, `Your issue ${Embed.fields[0].name} was marked: ${Data.data.options[0].options[1].value}`);
             }
         };
-        this.Command.register("849636767070289927", Issues, { "name": "issues" });
+        this.IntPi.registerCommand("849636767070289927", Issues, { "name": "issues" });
     }
 
     /**

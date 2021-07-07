@@ -6,8 +6,8 @@ module.exports = class Main {
     constructor(client, config) {
         this.client = client;
         this.config = config;
-        /** @type {import("../../Structures/Command.js")} */
-        this.Command = this.client.Struct.get("Command");
+        /** @type {import("../../Structures/InteractionPipeline.js")} */
+        this.Command = this.client.Struct.get("IntPi");
     }
 
     async moduleWillLoad() {
@@ -29,6 +29,6 @@ module.exports = class Main {
             });
         };
 
-        this.Command.register("847538619773485068", Ping, {"name": "ping"});
+        this.Command.registerCommand("847538619773485068", Ping, {"name": "ping"});
     }
 };

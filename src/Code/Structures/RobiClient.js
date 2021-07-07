@@ -35,7 +35,6 @@ module.exports = class RobiClient extends SnowTransfer {
         /** @type {Map<String, Object>} */
         this.Struct = new Map();
         this.Struct.set("MessageEmbed", require("./MessageEmbed.js"));
-        this.Struct.set("Command", new (require("./Command.js"))(this));
         this.Struct.set("EventHandler", new (require("./EventHandler.js"))(this));
         this.Struct.set("Utils", new (require("./Util.js"))(this));
         this.Struct.set("Database", new (require("../../Database/Database.js"))(Config));
@@ -57,16 +56,6 @@ module.exports = class RobiClient extends SnowTransfer {
         this.AmqpClient = this.Struct.get("AmqpClient");
         /** @type {RainCache} */
         this.RainCache = this.Struct.get("RainCache");
-
-        /*this.Struct.get("EventHandler").register("interaction_create", async (Data, Event) => {
-            const command = this.Modules.commands.get(Data.data.id);
-            if (!command) throw new Error("Received slash command for non existent/registered command");
-            this.Debug.command ? console.log(`Author  : ${Data.member ? Data.member.user.username : Data.user.username}\nCommand : ${command.options.name}`) : undefined;
-            command.command(Data, Event).catch(err => {
-                console.error("Error while running command\n", err);
-                this.Struct.get("Utils").sendErrorDetails(Data, err, "Command failure");
-            });
-        });*/
     }
 
     /**
@@ -109,7 +98,7 @@ module.exports = class RobiClient extends SnowTransfer {
                 if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
                     await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event.d, event).catch(err => {
                         console.error("Error while handling event\n", err);
-                        this.Struct.get("Utils").sendErrorDetails(event.d, err, "Handler failure");
+                        this.Struct.get("IntPi").sendErrorDetails(event.d, err, "Handler failure");
                     });
                 }
             };

@@ -65,28 +65,6 @@ module.exports = class Util {
     }
 
     /**
-     * Makes easier sending an error with details back to the end user
-     * @param {import("@amanda/discordtypings").InteractionData} Data 
-     * @param {(Error|string)} Err 
-     * @param {string} Type 
-     */
-    async sendErrorDetails(Data, Err, Type) {
-        this.client.interaction.createInteractionResponse(Data.id, Data.token, {
-            "type": 4, "data": {
-                "embeds": [
-                    new (this.client.Struct.get("MessageEmbed"))()
-                        .setTitle("Error while processing the slash interaction")
-                        .addField("Error Type", Type)
-                        .addField("Error Details", Err.toString())
-                        .setTimestamp()
-                        .setColor("RED")
-                ],
-                "flags": 64
-            }
-        }, );
-    }
-
-    /**
      * 
      * @param {String} userID 
      * @param {String} guildID 
