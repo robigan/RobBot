@@ -15,7 +15,7 @@ module.exports = class EventHandler {
     /**
      * Register an event handler
      * @param {string} event_type
-     * @param {function(import("cloudstorm/dist/src/Types").IWSMessage, *)} handler
+     * @param {function(import("cloudstorm/dist/Types").IWSMessage, *)} handler
      */
     async register(event_type, handler) {
         if (this.client.Modules.eventHandlers.get(event_type.toLowerCase())) throw new SyntaxError(`Event handler ${event_type} has already been registered`);

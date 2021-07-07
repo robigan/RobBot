@@ -22,11 +22,11 @@ module.exports = class Main {
             if (!Data.guild_id) { this.IntPi.sendErrorDetails(Data, new TypeError("Please execute this in a guild"), "Guild Verification failure"); return; }
             if (Data.data.options[0].name === "config") {
                 if ((Data.data.options[0].options) && Data.data.options[0].options[0].name === "channel") {
-                    this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Updating issues channel configuration", "flags": 64 } });
+                    this.IntPi.editResponse(Data, { "content": "Updating issues channel configuration", "flags": 64 });
                     await this.client.Database.Types.get("guilds").model.updateOne({ "_id": Data.guild_id }, { "configStore": { "issues": { "issuesChannel": Data.data.options[0].options[0].value } } });
                 } else {
-                    await this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 5 });
-                    this.client.interaction.editOriginalInteractionResponse(this.client.Identify.appID, Data.token, {
+                    //await this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 5 });
+                    this.IntPi.editResponse(Data, {
                         "embeds": [new (this.client.Struct.get("MessageEmbed"))()
                             .setColor("WHITE")
                             .setTimestamp()
@@ -53,7 +53,6 @@ module.exports = class Main {
             if (!IssuesChannel) return;
 
             if (Data.data.options[0].name === "create") {
-                this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Ok! Sent your issue", "flags": 64 } });
 
                 this.client.channel.createMessage(IssuesChannel, {
                     "embeds": [
@@ -68,43 +67,53 @@ module.exports = class Main {
                             .addField("Reason", "_No response currently_", true)
                             .setTitle("RobBot Issues")], // To modify
                     "content": `:bug: From: <#${Data.channel_id}>`
-                }).then(async (Data) => {
-                    const Embed = Object.assign({}, Data.embeds[0]);
-                    Embed.footer.text = `Bug ID: ${Data.id}`;
+                }).then(async (Message) => {
+                    this.IntPi.editResponse(Data, { "content": "Your issue has been sent!", "flags": 64 });
+                    const Embed = Object.assign({}, Message.embeds[0]);
+                    Embed.footer.text = `Bug ID: ${Message.id}`;
 
-                    this.client.channel.editMessage(IssuesChannel, Data.id, { "embeds": [ Embed ], "content": Data.content });
-                });
+                    this.client.channel.editMessage(IssuesChannel, Message.id, { "embeds": [Embed], "content": Message.content });
+                }).catch(Err => this.IntPi.sendErrorDetails(Data, Err, "createMessage"));
             }
             else if (Data.data.options[0].name === "reply") {
-                if (!this.client.Struct.get("Utils").checkPerms(Data.member.user.id, Data.guild_id, undefined, undefined, BigInt(1 << 13))) return;
-
-                this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Ok, modifying state", "flags": 64 } });
+                if (!this.client.Struct.get("Utils").checkPerms(Data.member.user.id, Data.guild_id, undefined, undefined, BigInt(1 << 13))) {
+                    this.IntPi.sendErrorDetails(Data, new Error("Missing permissions"), "Permission issue");
+                    return;
+                }
 
                 const IssueMessage = await this.client.channel.getChannelMessage(IssuesChannel, Data.data.options[0].options[0].value);
 
                 const Embed = new (this.client.Struct.get("MessageEmbed"))(IssueMessage.embeds[0]);
-                if (!(Embed.title === "RobBot Issues")) return;
+                if (!(Embed.title === "RobBot Issues") && IssueMessage.member.user.id === this.client.Identify.selfID) {
+                    this.IntPi.sendErrorDetails(Data, new Error("The specified message isn't a RobBot Issue"), "Check issue");
+                    return;
+                }
                 Embed.fields[3].value = Data.data.options[0].options[1].value;
 
-                this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embeds": [ Embed ], "content": IssueMessage.content });
+                this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embeds": [Embed], "content": IssueMessage.content });
 
                 this.dmUpdate(Embed, `Your issue ${Embed.fields[0].name} was replied to with: ${Data.data.options[0].options[1].value}`);
+
+                this.IntPi.editResponse(Data, { "content": "State has been modified!", "flags": 64 });
             }
             else if (Data.data.options[0].name === "mark") {
                 if (!this.client.Struct.get("Utils").checkPerms(Data.member.user.id, Data.guild_id, undefined, undefined, BigInt(1 << 13))) return;
 
-                this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 4, "data": { "content": "Ok, modifying state", "flags": 64 } });
-
                 const IssueMessage = await this.client.channel.getChannelMessage(IssuesChannel, Data.data.options[0].options[0].value);
 
                 const Embed = new (this.client.Struct.get("MessageEmbed"))(IssueMessage.embeds[0]);
-                if (!(Embed.title === "RobBot Issues")) return;
+                if (!(Embed.title === "RobBot Issues") && IssueMessage.member.user.id === this.client.Identify.selfID) {
+                    this.IntPi.sendErrorDetails(Data, new Error("The specified message isn't a RobBot Issue"), "Check issue");
+                    return;
+                }
                 Embed.fields[2].value = Data.data.options[0].options[1].value;
                 Embed.setColor(this.Colors[Data.data.options[0].options[1].value]);
 
-                this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embeds": [ Embed ], "content": IssueMessage.content });
+                this.client.channel.editMessage(IssuesChannel, Data.data.options[0].options[0].value, { "embeds": [Embed], "content": IssueMessage.content });
 
                 this.dmUpdate(Embed, `Your issue ${Embed.fields[0].name} was marked: ${Data.data.options[0].options[1].value}`);
+
+                this.IntPi.editResponse(Data, { "content": "State has been modified!", "flags": 64 });
             }
         };
         this.IntPi.registerCommand("849636767070289927", Issues, { "name": "issues" });

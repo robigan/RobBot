@@ -6,10 +6,11 @@ module.exports = class InteractionPipeline {
      */
     constructor(client) {
         this.client = client;
-        this.client.Struct.get("EventHandler").register("interaction_create", async (Data, Event) => {
+        this.client.Struct.get("EventHandler").register("interaction_create", async (/** @type {import("@amanda/discordtypings").InteractionData} */Data, /** @type {import("cloudstorm/dist/Types").IWSMessage} */Event) => {
             const command = this.client.Modules.commands.get(Data.data.id);
             if (!command) throw new Error("Received slash command for non existent/registered command");
             this.client.Debug.command ? console.log(`Author  : ${Data.member ? Data.member.user.username : Data.user.username}\nCommand : ${command.options.name}`) : undefined;
+            this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 5 });
             command.command(Data, Event).catch(err => {
                 console.error("Error while running command\n", err);
                 this.sendErrorDetails(Data, err, "Command failure");
@@ -86,18 +87,25 @@ module.exports = class InteractionPipeline {
      * @param {string} Type 
      */
     async sendErrorDetails(Data, Err, Type) {
-        this.client.interaction.createInteractionResponse(Data.id, Data.token, {
-            "type": 4, "data": {
-                "embeds": [
-                    new (this.client.Struct.get("MessageEmbed"))()
-                        .setTitle("Error while processing the slash interaction")
-                        .addField("Error Type", Type)
-                        .addField("Error Details", Err.toString())
-                        .setTimestamp()
-                        .setColor("RED")
-                ],
-                "flags": 64
-            }
+        await this.editResponse(Data.id, Data.token, {
+            "embeds": [
+                new (this.client.Struct.get("MessageEmbed"))()
+                    .setTitle("Error while processing the slash interaction")
+                    .addField("Error Type", Type)
+                    .addField("Error Details", Err.toString())
+                    .setTimestamp()
+                    .setColor("RED")
+            ],
+            "flags": 64
         });
+    }
+
+    /**
+     * editResponse, handles the createInteractionResponse method, and integrates it with the Interaction Pipeline
+     * @param {import("@amanda/discordtypings").InteractionData} Data 
+     * @param {import("@amanda/discordtypings").InteractionApplicationCommandCallbackData} CallbackStructure 
+     */
+    async editResponse(Data, CallbackStructure) {
+        await this.client.interaction.editOriginalInteractionResponse(this.client.Identify.appID, Data.token, CallbackStructure).catch(Err => this.sendErrorDetails(Data, Err, "editOriginalInteractionResponse"));
     }
 };

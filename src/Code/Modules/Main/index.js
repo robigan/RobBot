@@ -7,16 +7,15 @@ module.exports = class Main {
         this.client = client;
         this.config = config;
         /** @type {import("../../Structures/InteractionPipeline.js")} */
-        this.Command = this.client.Struct.get("IntPi");
+        this.IntPi = this.client.Struct.get("IntPi");
     }
 
     async moduleWillLoad() {
         /** @param {import("@amanda/discordtypings").InteractionData} Data */
         const Ping = async (Data, Event) => {
-            await this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 5 });
             /** @type {import("@amanda/discordtypings").MessageData} */
             const OrigInterRes = await this.client.interaction.getOriginalInteractionResponse(this.client.Identify.appID, Data.token);
-            this.client.interaction.editOriginalInteractionResponse(this.client.Identify.appID, Data.token, {
+            this.IntPi.editResponse(Data, {
                 "embeds": [new (this.client.Struct.get("MessageEmbed"))()
                     .setColor("YELLOW")
                     .setTimestamp()
@@ -29,6 +28,6 @@ module.exports = class Main {
             });
         };
 
-        this.Command.registerCommand("847538619773485068", Ping, {"name": "ping"});
+        this.IntPi.registerCommand("847538619773485068", Ping, {"name": "ping"});
     }
 };

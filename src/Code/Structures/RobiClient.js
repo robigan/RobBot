@@ -92,13 +92,14 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Identify.selfID = (await this.Cache.user.get("self")).id;
         this.Struct.get("AmqpClient").initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());
+            /** @param {import("cloudstorm/dist/Types").IWSMessage} event */
             const Dispatch = async (event) => {
                 this.Debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
                 this.Debug.events.data && this.Debug.events.data[event.t] ? console.log("data", event.d) : undefined;
                 if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
                     await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event.d, event).catch(err => {
                         console.error("Error while handling event\n", err);
-                        this.Struct.get("IntPi").sendErrorDetails(event.d, err, "Handler failure");
+                        event.t === "interaction_create" ? this.Struct.get("IntPi").sendErrorDetails(event.d, err, "Handler failure") : undefined;
                     });
                 }
             };
