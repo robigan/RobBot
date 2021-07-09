@@ -65,7 +65,6 @@ module.exports = class RobiClient extends SnowTransfer {
      */
     validate(Config) {
         if (typeof Config !== "object") throw new TypeError("Config and should be a type of Object");
-
         if (!Config.token) throw new Error("You must pass the token for the client");
 
         this.Debug = Config.debug ?? false;
@@ -81,17 +80,22 @@ module.exports = class RobiClient extends SnowTransfer {
     async start() {
         await this.RainCache.initialize();
         this.Cache = this.RainCache.cache;
+
         await this.Database.start();
         await this.Database.loadTypes();
+
         this.Debug.moduleRegister ? console.log("Code    : Starting register process of modules") : undefined;
         await this.Struct.get("Utils").loadModules().catch((err) => {
             console.error(err);
         }).finally(() => {
             this.Debug.moduleRegister ? console.log("Code    : Register process of Modules complete") : undefined;
         }).catch(err => console.error("Error while loading modules\n", err));
+
         this.Identify.selfID = (await this.Cache.user.get("self")).id;
+
         this.Struct.get("AmqpClient").initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());
+
             /** @param {import("cloudstorm/dist/Types").IWSMessage} event */
             const Dispatch = async (event) => {
                 this.Debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;

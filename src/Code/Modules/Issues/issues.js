@@ -25,7 +25,6 @@ module.exports = class Main {
                     this.IntPi.editResponse(Data, { "content": "Updating issues channel configuration", "flags": 64 });
                     await this.client.Database.Types.get("guilds").model.updateOne({ "_id": Data.guild_id }, { "configStore": { "issues": { "issuesChannel": Data.data.options[0].options[0].value } } });
                 } else {
-                    //await this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 5 });
                     this.IntPi.editResponse(Data, {
                         "embeds": [new (this.client.Struct.get("MessageEmbed"))()
                             .setColor("WHITE")

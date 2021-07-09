@@ -28,6 +28,15 @@ module.exports = class Main {
             });
         };
 
+        /** @param {import("@amanda/discordtypings").InteractionData} Data */
+        const Info = async (Data, Event) {
+            this.IntPi.editResponse(Data, {
+                "embeds":[new (this.client.Struct.get("MessageEmbed"))()
+                    .setColor("YELLOW")
+                ]
+            })
+        }
+
         this.IntPi.registerCommand("847538619773485068", Ping, {"name": "ping"});
     }
 };
