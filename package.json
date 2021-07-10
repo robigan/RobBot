@@ -1,6 +1,6 @@
 {
   "name": "robbot",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Robigan's discord bot",
   "main": "index.js",
   "dependencies": {
@@ -18,9 +18,9 @@
   },
   "scripts": {
     "test": "node index.js",
-    "gateway": "node -e \"require(\\\"./Starters/Gateway.js\\\")()\"",
-    "cache": "node -e \"require(\\\"./Starters/Cache.js\\\")()\"",
-    "code": "node -e \"require(\\\"./Starters/Code.js\\\")()\""
+    "gateway": "node -e \"require(\\\"./src/Gateway/Gateway.js\\\")()\"",
+    "cache": "node -e \"require(\\\"./src/Cache/Cache.js\\\")()\"",
+    "code": "node -e \"require(\\\"./src/Code/Code.js\\\")()\""
   },
   "keywords": [
     "discord",
