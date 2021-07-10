@@ -4,6 +4,6 @@
     "version": "1.0.0",
     "description": "The Gateway instance has all the functionality for handling gateway stuff",
     "author": "robigan#1634",
-    "entryPath": "/GatewayClient.js",
+    "entryPath": "/Gateway.js",
     "type": "executable"
 }

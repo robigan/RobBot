@@ -29,33 +29,32 @@ module.exports = class Util {
      */
     async loadModules() {
         console.warn("Code    : Remember, only load Modules you trust");
-        LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json")).then((modules) => {
-            for (const ManifestPath of modules) {
-                delete require.cache[ManifestPath];
-                /** @type {{"id": string, "name": string, "version": string, "description": string, "author": string, "entryPath": string, "config": Object, "type": ("executable" | "dependency" | "other")}} */
-                const Manifest = require(ManifestPath);
+        const Modules = await LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json"));
+        for (const ManifestPath of Modules) {
+            delete require.cache[ManifestPath];
+            /** @type {{"id": string, "name": string, "version": string, "description": string, "author": string, "entryPath": string, "config": Object, "type": ("executable" | "dependency" | "other")}} */
+            const Manifest = require(ManifestPath);
 
-                if (!Manifest.id) throw new TypeError(`Module (at ${LocRes.Path.dirname(ManifestPath)}) doesn't have an ID property`);
-                if (!Manifest.version) throw new TypeError(`Module ${Manifest.id} doesn't have a version property`);
-                if (!Manifest.entryPath) throw new TypeError(`Module ${Manifest.id} doesn't have an entryPath property`);
-                if (!Manifest.type) console.warn(`Module ${Manifest.id} doesn't have a type property, it is advised to have a type property`);
-                Manifest.name = Manifest.name ?? Manifest.id;
-                Manifest.description = Manifest.description ?? "No description provided";
-                Manifest.author = Manifest.author ?? "Unknown author";
-                Manifest.type = Manifest.type ?? "executable";
+            if (!Manifest.id) throw new TypeError(`Module (at ${LocRes.Path.dirname(ManifestPath)}) doesn't have an ID property`);
+            if (!Manifest.version) throw new TypeError(`Module ${Manifest.id} doesn't have a version property`);
+            if (!Manifest.entryPath) throw new TypeError(`Module ${Manifest.id} doesn't have an entryPath property`);
+            if (!Manifest.type) console.warn(`Module ${Manifest.id} doesn't have a type property, it is advised to have a type property`);
+            Manifest.name = Manifest.name ?? Manifest.id;
+            Manifest.description = Manifest.description ?? "No description provided";
+            Manifest.author = Manifest.author ?? "Unknown author";
+            Manifest.type = Manifest.type ?? "executable";
 
-                if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Module ${Manifest.id} has already been loaded`);
-                if (Manifest.type !== "executable") return;
+            if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Module ${Manifest.id} has already been loaded`);
+            if (Manifest.type !== "executable") continue;
 
-                const ModulePath = LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
-                delete require.cache[ModulePath];
-                const Module = new (require(ModulePath))(this.client, Manifest.config);
-                (async () => {
-                    Module.moduleWillLoad();
-                    this.client.Modules.modules.set(Manifest.id, { "manifest": Manifest, "module": Module });
-                })().catch(err => console.error("Error while loading modules\n", err));
-            }
-        });
+            const ModulePath = LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
+            delete require.cache[ModulePath];
+            const Module = new (require(ModulePath))(this.client, Manifest.config);
+            (async () => {
+                Module.moduleWillLoad();
+                this.client.Modules.modules.set(Manifest.id, { "manifest": Manifest, "module": Module });
+            })().catch(err => console.error("Error while loading modules\n", err));
+        }
     }
 
     /**

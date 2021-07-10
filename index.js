@@ -1,24 +1,11 @@
 // JavaScript source code main entry point
-const LocRes = new (require("../../../LocationResolver.js"));
+const LocRes = new (require("./LocationResolver.js"));
 const AmqpClient = new (require("./src/amqp/AmqpClient.js"))(require("./Configs/Config.json").amqp);
-
-/*const Code = require("./Starters/Code.js");
-const Gateway = require("./Starters/Gateway.js");
-const Cache = require("./Starters/Cache.js");
-
-const AmqpClient = new (require("./src/amqp/AmqpClient.js"))(require("./Configs/Config.json").amqp);
-
-(async () => {
-    await AmqpClient.start();
-    Code(undefined, AmqpClient);
-    Cache(undefined, AmqpClient);
-    Gateway(undefined, AmqpClient);
-})().catch(console.error);*/
 
 (async () => {
     const Instances = new Map();
 
-    const Modules = LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json"));
+    const Modules = await LocRes.glob(await LocRes.redirect("/src/*/manifest.json"));
     for (const ManifestPath of Modules) {
         delete require.cache[ManifestPath];
         /** @type {{"id": string, "name": string, "version": string, "description": string, "author": string, "entryPath": string, "type": ("executable" | "dependency" | "other")}} */
@@ -34,7 +21,7 @@ const AmqpClient = new (require("./src/amqp/AmqpClient.js"))(require("./Configs/
         Manifest.type = Manifest.type ?? "executable";
 
         if (Instances.get(Manifest.id)) throw new SyntaxError(`Module ${Manifest.id} has already been loaded`);
-        if (Manifest.type !== "executable") return;
+        if (Manifest.type !== "executable") continue;
 
         const ModulePath = LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
         delete require.cache[ModulePath];
