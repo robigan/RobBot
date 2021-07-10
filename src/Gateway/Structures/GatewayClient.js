@@ -10,7 +10,7 @@ module.exports = class GatewayClient extends CloudStorm {
      * Initiate the gateway service for RobBot
      * @constructor
      * @param {object} Config
-     * @param {import("../amqp/AmqpClient")} AmqpClient
+     * @param {import("../../amqp/AmqpClient")} AmqpClient
      */
     constructor(Config, AmqpClient) {
         super(Config.token, Config.CloudStorm);
