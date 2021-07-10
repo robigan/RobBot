@@ -4,14 +4,14 @@
   "description": "Robigan's discord bot",
   "main": "index.js",
   "dependencies": {
-    "@amanda/discordtypings": "github:AmandaDiscord/DiscordTypings#bd43c3a022981d414a0aada92ddced1574c9aeab",
+    "@amanda/discordtypings": "github:AmandaDiscord/DiscordTypings#78fd19db679557d4d47506294a3ae41d8b36f5a0",
     "amqplib-plus": "^1.0.9",
-    "cloudstorm": "github:AmandaDiscord/CloudStorm#1c661cf0fefa0ec7baa89d5bcb112d342f1c150d",
+    "cloudstorm": "github:AmandaDiscord/CloudStorm#500873fc2cb814ee5c8210fb2dae25396b548bdc",
     "glob-promise": "^4.2.0",
     "mongoose": "^5.13.2",
     "ms": "^2.1.3",
     "raincache": "github:AmandaDiscord/RainCache#8f510448ed1d900a0a85e4345fbc5288a19c82ab",
-    "snowtransfer": "github:AmandaDiscord/SnowTransfer#d0e8f0f4f5124ac061a681dd3a954b5e25206031"
+    "snowtransfer": "github:AmandaDiscord/SnowTransfer#2b2d8e6a0330831d697e4214414b880bb0e4ab6f"
   },
   "devDependencies": {
     "eslint": "^7.30.0"
@@ -36,5 +36,5 @@
     "type": "git",
     "url": "https://github.com/robigan/RobBot"
   },
-  "license": ""
+  "license": "GPL-3"
 }

@@ -4,5 +4,6 @@
     "version": "1.0.0",
     "description": "A test module for RobBot's new modular system",
     "author": "robigan#1634",
-    "entryPath": "/test.js"
+    "entryPath": "/test.js",
+    "type": "executable"
 }

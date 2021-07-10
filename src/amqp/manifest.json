@@ -1,0 +1,9 @@
+{
+    "id": "robigan.amqp",
+    "name": "amqp",
+    "version": "1.0.0",
+    "description": "The amqp module handles interactions inbetween instances and all other RabbitMQ/AMQP methods/calls",
+    "author": "robigan#1634",
+    "entryPath": "/AmqpClient.js",
+    "type": "dependency"
+}

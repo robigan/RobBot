@@ -32,8 +32,21 @@ module.exports = class Util {
         LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json")).then((modules) => {
             for (const ManifestPath of modules) {
                 delete require.cache[ManifestPath];
+                /** @type {{"id": string, "name": string, "version": string, "description": string, "author": string, "entryPath": string, "config": Object, "type": ("executable" | "dependency" | "other")}} */
                 const Manifest = require(ManifestPath);
-                if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Event ${Manifest.id} has already been loaded`);
+
+                if (!Manifest.id) throw new TypeError(`Module (at ${LocRes.Path.dirname(ManifestPath)}) doesn't have an ID property`);
+                if (!Manifest.version) throw new TypeError(`Module ${Manifest.id} doesn't have a version property`);
+                if (!Manifest.entryPath) throw new TypeError(`Module ${Manifest.id} doesn't have an entryPath property`);
+                if (!Manifest.type) console.warn(`Module ${Manifest.id} doesn't have a type property, it is advised to have a type property`);
+                Manifest.name = Manifest.name ?? Manifest.id;
+                Manifest.description = Manifest.description ?? "No description provided";
+                Manifest.author = Manifest.author ?? "Unknown author";
+                Manifest.type = Manifest.type ?? "executable";
+
+                if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Module ${Manifest.id} has already been loaded`);
+                if (Manifest.type !== "executable") return;
+
                 const ModulePath = LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
                 delete require.cache[ModulePath];
                 const Module = new (require(ModulePath))(this.client, Manifest.config);

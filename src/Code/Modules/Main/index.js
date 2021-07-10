@@ -29,14 +29,19 @@ module.exports = class Main {
         };
 
         /** @param {import("@amanda/discordtypings").InteractionData} Data */
-        const Info = async (Data, Event) {
+        const Info = async (Data) => {
             this.IntPi.editResponse(Data, {
                 "embeds":[new (this.client.Struct.get("MessageEmbed"))()
                     .setColor("YELLOW")
+                    .setTimestamp()
+                    .setTitle("Bot Information")
+                    .addField("General Information", `Node: ${process.versions.node}\nV8 engine: ${process.versions.v8}`)
+                    //.addField("")
                 ]
-            })
-        }
+            });
+        };
 
+        this.IntPi.registerCommand("863161919816728576", Info, {"name": "info"});
         this.IntPi.registerCommand("847538619773485068", Ping, {"name": "ping"});
     }
 };
