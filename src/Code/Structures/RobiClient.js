@@ -31,8 +31,15 @@ module.exports = class RobiClient extends SnowTransfer {
             eventHandlers: new Map(),
             modules: new Map(),
         };
+
         /** @type {Map<String, Object>} */
-        this.Struct = new Map([["MessageEmbed", require("./MessageEmbed.js")], ["Command", new (require("./Command.js"))(this)], ["EventHandler", new (require("./EventHandler.js"))(this)], ["Utils", new (require("./Util.js"))(this)], ["Database", new (require("../../Database/Database.js"))(Config)], ["AmqpClient", AmqpClient], ["RainCache", new RainCache({
+        this.Struct = new Map();
+        this.Struct.set("MessageEmbed", require("./MessageEmbed.js"));
+        this.Struct.set("EventHandler", new (require("./EventHandler.js"))(this));
+        this.Struct.set("Utils", new (require("./Util.js"))(this));
+        this.Struct.set("Database", new (require("../../Database/Database.js"))(Config));
+        this.Struct.set("AmqpClient", AmqpClient);
+        this.Struct.set("RainCache", new RainCache({
             storage: {
                 default: new RainCache.Engines.RedisStorageEngine({
                     redisOptions: {
@@ -40,7 +47,8 @@ module.exports = class RobiClient extends SnowTransfer {
                     }
                 })
             }, debug: false
-        }, null, null)]]);
+        }, null, null));
+        this.Struct.set("IntPi", new (require("./InteractionPipeline.js"))(this));
 
         /** @type {import("../../Database/Database.js")} */
         this.Database = this.Struct.get("Database");
@@ -48,16 +56,6 @@ module.exports = class RobiClient extends SnowTransfer {
         this.AmqpClient = this.Struct.get("AmqpClient");
         /** @type {RainCache} */
         this.RainCache = this.Struct.get("RainCache");
-
-        this.Struct.get("EventHandler").register("interaction_create", async (Data, Event) => {
-            const command = this.Modules.commands.get(Data.data.id);
-            if (!command) throw new Error("Received slash command for non existent/registered command");
-            this.Debug.command ? console.log(`Author  : ${Data.member ? Data.member.user.username : Data.user.username}\nCommand : ${command.options.name}`) : undefined;
-            command.command(Data, Event).catch(err => {
-                console.error("Error while running command\n", err);
-                this.Struct.get("Utils").sendErrorDetails(Data, err, "Command failure");
-            });
-        });
     }
 
     /**
@@ -67,7 +65,6 @@ module.exports = class RobiClient extends SnowTransfer {
      */
     validate(Config) {
         if (typeof Config !== "object") throw new TypeError("Config and should be a type of Object");
-
         if (!Config.token) throw new Error("You must pass the token for the client");
 
         this.Debug = Config.debug ?? false;
@@ -83,24 +80,30 @@ module.exports = class RobiClient extends SnowTransfer {
     async start() {
         await this.RainCache.initialize();
         this.Cache = this.RainCache.cache;
+
         await this.Database.start();
         await this.Database.loadTypes();
+
         this.Debug.moduleRegister ? console.log("Code    : Starting register process of modules") : undefined;
         await this.Struct.get("Utils").loadModules().catch((err) => {
             console.error(err);
         }).finally(() => {
             this.Debug.moduleRegister ? console.log("Code    : Register process of Modules complete") : undefined;
         }).catch(err => console.error("Error while loading modules\n", err));
+
         this.Identify.selfID = (await this.Cache.user.get("self")).id;
+
         this.Struct.get("AmqpClient").initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());
+
+            /** @param {import("cloudstorm/dist/Types").IWSMessage} event */
             const Dispatch = async (event) => {
                 this.Debug.events.type ? console.log(`Code    : Event received, type ${event.t}`) : undefined;
                 this.Debug.events.data && this.Debug.events.data[event.t] ? console.log("data", event.d) : undefined;
                 if (event.t && this.Modules.eventHandlers.get((event.t).toLowerCase())) {
                     await (this.Modules.eventHandlers.get((event.t).toLowerCase()))(event.d, event).catch(err => {
                         console.error("Error while handling event\n", err);
-                        this.Struct.get("Utils").sendErrorDetails(event.d, err, "Handler failure");
+                        event.t === "interaction_create" ? this.Struct.get("IntPi").sendErrorDetails(event.d, err, "Handler failure") : undefined;
                     });
                 }
             };

@@ -1,0 +1,9 @@
+{
+    "id": "robigan.database",
+    "name": "Database",
+    "version": "1.0.0",
+    "description": "The Database module handles calls for interacting with the MongoDB database",
+    "author": "robigan#1634",
+    "entryPath": "/Database.js",
+    "type": "dependency"
+}

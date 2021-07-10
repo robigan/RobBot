@@ -1,0 +1,9 @@
+{
+    "id": "robigan.code",
+    "name": "Code",
+    "version": "1.0.0",
+    "description": "The Code instance has all the main functionality for the bot to run",
+    "author": "robigan#1634",
+    "entryPath": "/Code.js",
+    "type": "executable"
+}

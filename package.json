@@ -1,27 +1,26 @@
 {
   "name": "robbot",
-  "version": "0.6.",
+  "version": "1.7.0",
   "description": "Robigan's discord bot",
   "main": "index.js",
   "dependencies": {
-    "@amanda/discordtypings": "github:AmandaDiscord/DiscordTypings#bd43c3a022981d414a0aada92ddced1574c9aeab",
+    "@amanda/discordtypings": "github:AmandaDiscord/DiscordTypings#78fd19db679557d4d47506294a3ae41d8b36f5a0",
     "amqplib-plus": "^1.0.9",
-    "cachegoose": "^8.0.0",
-    "cloudstorm": "github:AmandaDiscord/CloudStorm#507e905c45f17a7c89a614d50d91f51ecbab4721",
+    "cloudstorm": "github:AmandaDiscord/CloudStorm#500873fc2cb814ee5c8210fb2dae25396b548bdc",
     "glob-promise": "^4.2.0",
-    "mongoose": "^5.12.14",
+    "mongoose": "^5.13.2",
     "ms": "^2.1.3",
     "raincache": "github:AmandaDiscord/RainCache#8f510448ed1d900a0a85e4345fbc5288a19c82ab",
-    "snowtransfer": "github:AmandaDiscord/SnowTransfer#d0e8f0f4f5124ac061a681dd3a954b5e25206031"
+    "snowtransfer": "github:AmandaDiscord/SnowTransfer#2b2d8e6a0330831d697e4214414b880bb0e4ab6f"
   },
   "devDependencies": {
-    "eslint": "^7.29.0"
+    "eslint": "^7.30.0"
   },
   "scripts": {
     "test": "node index.js",
-    "gateway": "node -e \"require(\\\"./Starters/Gateway.js\\\")()\"",
-    "cache": "node -e \"require(\\\"./Starters/Cache.js\\\")()\"",
-    "code": "node -e \"require(\\\"./Starters/Code.js\\\")()\""
+    "gateway": "node -e \"require(\\\"./src/Gateway/Gateway.js\\\")()\"",
+    "cache": "node -e \"require(\\\"./src/Cache/Cache.js\\\")()\"",
+    "code": "node -e \"require(\\\"./src/Code/Code.js\\\")()\""
   },
   "keywords": [
     "discord",
@@ -37,5 +36,5 @@
     "type": "git",
     "url": "https://github.com/robigan/RobBot"
   },
-  "license": ""
+  "license": "GPL-3"
 }

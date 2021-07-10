@@ -5,7 +5,6 @@
     "description": "A module similar to CarlBot's suggestion system but inspired from GitHub issues",
     "author": "robigan#1634",
     "entryPath": "/issues.js",
-    "config": {
-        "issuesChannel": "849743735147593758"
-    }
+    "config": {},
+    "type": "executable"
 }

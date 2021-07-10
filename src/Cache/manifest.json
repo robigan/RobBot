@@ -1,0 +1,9 @@
+{
+    "id": "robigan.cache",
+    "name": "Cache",
+    "version": "1.0.0",
+    "description": "The Cache instance has all the \"middleware\" needed for caching",
+    "author": "robigan#1634",
+    "entryPath": "/Cache.js",
+    "type": "executable"
+}

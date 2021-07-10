@@ -6,17 +6,16 @@ module.exports = class Main {
     constructor(client, config) {
         this.client = client;
         this.config = config;
-        /** @type {import("../../Structures/Command.js")} */
-        this.Command = this.client.Struct.get("Command");
+        /** @type {import("../../Structures/InteractionPipeline.js")} */
+        this.IntPi = this.client.Struct.get("IntPi");
     }
 
     async moduleWillLoad() {
         /** @param {import("@amanda/discordtypings").InteractionData} Data */
         const Ping = async (Data, Event) => {
-            await this.client.interaction.createInteractionResponse(Data.id, Data.token, { "type": 5 });
             /** @type {import("@amanda/discordtypings").MessageData} */
             const OrigInterRes = await this.client.interaction.getOriginalInteractionResponse(this.client.Identify.appID, Data.token);
-            this.client.interaction.editOriginalInteractionResponse(this.client.Identify.appID, Data.token, {
+            this.IntPi.editResponse(Data, {
                 "embeds": [new (this.client.Struct.get("MessageEmbed"))()
                     .setColor("YELLOW")
                     .setTimestamp()
@@ -29,6 +28,20 @@ module.exports = class Main {
             });
         };
 
-        this.Command.register("847538619773485068", Ping, {"name": "ping"});
+        /** @param {import("@amanda/discordtypings").InteractionData} Data */
+        const Info = async (Data) => {
+            this.IntPi.editResponse(Data, {
+                "embeds":[new (this.client.Struct.get("MessageEmbed"))()
+                    .setColor("YELLOW")
+                    .setTimestamp()
+                    .setTitle("Bot Information")
+                    .addField("General Information", `Node: ${process.versions.node}\nV8 engine: ${process.versions.v8}`)
+                    //.addField("")
+                ]
+            });
+        };
+
+        this.IntPi.registerCommand("863161919816728576", Info, {"name": "info"});
+        this.IntPi.registerCommand("847538619773485068", Ping, {"name": "ping"});
     }
 };
