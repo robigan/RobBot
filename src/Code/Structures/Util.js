@@ -97,8 +97,8 @@ module.exports = class Util {
         } else if (!roleID && channelID) {
             // eslint-disable-next-line no-unused-vars
             const Member = await this.client.Cache.member.get(userID, guildID);
-            const Channel = await this.client.Cache.permOverwrite.getIndexMembers(guildID);
-            Channel.every(async value => {
+            const Channel = await this.client.Cache.channel.get(channelID);
+            await Channel.boundObject.permission_overwrites.every(async value => {
                 const Override = await this.client.Cache.permOverwrite.get(value, channelID);
                 Override.boundObject;
             });

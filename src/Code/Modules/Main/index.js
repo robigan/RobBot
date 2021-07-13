@@ -36,7 +36,22 @@ module.exports = class Main {
                     .setTimestamp()
                     .setTitle("Bot Information")
                     .addField("General Information", `Node: ${process.versions.node}\nV8 engine: ${process.versions.v8}`)
-                    //.addField("")
+                    .addField("Instances Information", (() => {
+                        let TargetString = "";
+                        /** @type {Map} */
+                        global.robbotInstances.forEach((Obj) => {
+                            TargetString += `${Obj.manifest.name} (${Obj.manifest.id}): ${Obj.manifest.version}\n`;
+                        });
+                        return TargetString;
+                    })())
+                    .addField("Modules Information (Code Instance)", (() => {
+                        let TargetString = "";
+                        /** @type {Map} */
+                        this.client.Modules.modules.forEach((Obj) => {
+                            TargetString += `${Obj.manifest.name} (${Obj.manifest.id}): ${Obj.manifest.version}\n`;
+                        });
+                        return TargetString;
+                    })())
                 ]
             });
         };
