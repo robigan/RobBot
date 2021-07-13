@@ -10,12 +10,10 @@ const GatewayClientConfig = require("../../Configs/GatewayClient.json");
 /**
  * Wrapper function for initiating GatewayClient
  * @param {object} Config
- * @param {import("../amqp/AmqpClient")} AmqpClient
  * @returns {import("./Structures/GatewayClient.js")} GatewayClient
  */
-module.exports = async (Config = Object.assign(GatewayClientConfig, MainConfig, SecretConfig), AmqpClient = new (require("../amqp/AmqpClient.js"))(MainConfig.amqp)/*, LocResProvided = require("./LocationResolver.js")*/) => {
-    //global.LocRes = LocResProvided;
-    const Gateway = new GatewayClient(Config, AmqpClient);
+module.exports = async (Config = Object.assign(GatewayClientConfig, MainConfig, SecretConfig)) => {
+    const Gateway = new GatewayClient(Config);
     Gateway.start();
     Config.debug.init ? console.log("Gateway : started") : undefined;
     return Gateway;

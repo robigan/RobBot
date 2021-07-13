@@ -1,6 +1,3 @@
-//const EventHandler = require("./EventHandler.js");
-const LocRes = new (require("../../../LocationResolver.js"));
-
 module.exports = class Util {
     /**
      * Constructor for utils
@@ -9,7 +6,7 @@ module.exports = class Util {
      */
     constructor(client) {
         this.client = client;
-        this.LocRes = LocRes;
+        this.LocRes = global.robbotLocRes;
     }
 
     /**
@@ -29,13 +26,13 @@ module.exports = class Util {
      */
     async loadModules() {
         console.warn("Code    : Remember, only load Modules you trust");
-        const Modules = await LocRes.glob(await LocRes.redirect("/Modules/Code/*/manifest.json"));
+        const Modules = await this.LocRes.glob(await this.LocRes.redirect("/Modules/Code/*/manifest.json"));
         for (const ManifestPath of Modules) {
             delete require.cache[ManifestPath];
             /** @type {{"id": string, "name": string, "version": string, "description": string, "author": string, "entryPath": string, "config": Object, "type": ("executable" | "dependency" | "other")}} */
             const Manifest = require(ManifestPath);
 
-            if (!Manifest.id) throw new TypeError(`Module (at ${LocRes.Path.dirname(ManifestPath)}) doesn't have an ID property`);
+            if (!Manifest.id) throw new TypeError(`Module (at ${this.LocRes.Path.dirname(ManifestPath)}) doesn't have an ID property`);
             if (!Manifest.version) throw new TypeError(`Module ${Manifest.id} doesn't have a version property`);
             if (!Manifest.entryPath) throw new TypeError(`Module ${Manifest.id} doesn't have an entryPath property`);
             if (!Manifest.type) console.warn(`Module ${Manifest.id} doesn't have a type property, it is advised to have a type property`);
@@ -47,7 +44,7 @@ module.exports = class Util {
             if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Module ${Manifest.id} has already been loaded`);
             if (Manifest.type !== "executable") continue;
 
-            const ModulePath = LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
+            const ModulePath = this.LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
             delete require.cache[ModulePath];
             const Module = new (require(ModulePath))(this.client, Manifest.config);
             (async () => {

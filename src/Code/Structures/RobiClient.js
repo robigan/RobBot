@@ -1,15 +1,13 @@
 const SnowTransfer = require("snowtransfer");
 const RainCache = require("raincache");
-//const Util = require("./Util.js");
 
 module.exports = class RobiClient extends SnowTransfer {
     /**
      * Initiate the RobiClient for RobBot
      * @constructor
      * @param {Object} Config 
-     * @param {import("../../amqp/AmqpClient")} AmqpClient 
      */
-    constructor(Config = {}, AmqpClient) {
+    constructor(Config = {}) {
         super(Config.token, Config.SnowTransfer);
         this.validate(Config);
 
@@ -38,7 +36,7 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Struct.set("EventHandler", new (require("./EventHandler.js"))(this));
         this.Struct.set("Utils", new (require("./Util.js"))(this));
         this.Struct.set("Database", new (require("../../Database/Database.js"))(Config));
-        this.Struct.set("AmqpClient", AmqpClient);
+        this.Struct.set("AmqpClient", global.robbotAmqpClient);
         this.Struct.set("RainCache", new RainCache({
             storage: {
                 default: new RainCache.Engines.RedisStorageEngine({
@@ -49,11 +47,10 @@ module.exports = class RobiClient extends SnowTransfer {
             }, debug: false
         }, null, null));
         this.Struct.set("IntPi", new (require("./InteractionPipeline.js"))(this));
+        this.Struct.set("LocRes", global.robbotLocRes);
 
         /** @type {import("../../Database/Database.js")} */
         this.Database = this.Struct.get("Database");
-        /** @type {import("../../amqp/AmqpClient.js")} */
-        this.AmqpClient = this.Struct.get("AmqpClient");
         /** @type {RainCache} */
         this.RainCache = this.Struct.get("RainCache");
     }

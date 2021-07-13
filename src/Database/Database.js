@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const LocRes = new (require("../../LocationResolver.js"));
 const BaseModel = require("./BaseModel.js");
 
 module.exports = class DatabaseManager {
@@ -29,7 +28,7 @@ module.exports = class DatabaseManager {
      * @function
      */
     async loadTypes() {
-        const Types = await LocRes.glob(await LocRes.redirect("src/Database/Types/*.js"));
+        const Types = await global.robbotLocRes.glob(await global.robbotLocRes.redirect("src/Database/Types/*.js"));
         for (const Type of Types) {
             delete require.cache[Type];
             const Model = new (require(Type))(this);
