@@ -93,27 +93,41 @@ module.exports = class Util {
             if ((Member === null) || (Role === null)) return false, "Data requested not cached";
             if (Member.boundObject.roles.includes(roleID)) return false, "Member doesn't have specified role";
             const RolePerm = BigInt(Role.boundObject.permissions);
-            return BigInt(RolePerm & TargetPerm) === BigInt(0) ? false : true;
+            return BigInt(RolePerm & TargetPerm) === BigInt(0) ? false : true; // If the Role the user has contains the permission we requested and don't equal 0, then true
         } else if (!roleID && channelID) {
-            // eslint-disable-next-line no-unused-vars
             const Member = await this.client.Cache.member.get(userID, guildID);
             const Channel = await this.client.Cache.channel.get(channelID);
-            await Channel.boundObject.permission_overwrites.every(async value => {
-                const Override = await this.client.Cache.permOverwrite.get(value, channelID);
-                Override.boundObject;
-            });
+            if ((Member === null) || (Channel === null)) return false, "Data requested not cached";
+            if (await Channel.boundObject.permission_overwrites.every(async value => { // Just think of it returning true if the user isn't allowed
+                const Overwrite = await this.client.Cache.permOverwrite.get(value, channelID);
+                if (Overwrite === null) return false, "Data requested not cached";
+                if (Overwrite.boundObject.type === 0 && !Member.boundObject.roles.includes(value)) return true; // Return true bc it's to be ignored and not affect results
+                if (Overwrite.boundObject.type === 1 && value !== Member.boundObject.user.id) return true;
+                if (!BigInt(BigInt(Overwrite.boundObject.deny) & TargetPerm) === BigInt(0)) return true;
+                else if (!BigInt(BigInt(Overwrite.boundObject.allow) & TargetPerm) === BigInt(0)) return false;
+            })) return false;
+            return true;
         } else if (!roleID && !channelID) { // Incase if channelID and roleID were not specified
             const Member = await this.client.Cache.member.get(userID, guildID);
             if ((Member === null)) return false, "Data requested not cached";
             if (await Member.boundObject.roles.every(async value => { // Just think of it returning true if the user isn't allowed
-                const Role = await this.client.Cache.role.get(value, guildID);
+                /*const Role = await this.client.Cache.role.get(value, guildID);
                 if ((Role === null)) return true;
                 const RolePerm = BigInt(Role.boundObject.permissions);
-                return !(BigInt(RolePerm & TargetPerm) === BigInt(0) ? false : true);
+                return !(BigInt(RolePerm & TargetPerm) === BigInt(0) ? false : true);*/
+                return !(await this.checkPerms(userID, guildID, undefined, value, TargetPerm));
             })) return false;
             return true;
+        } else if (roleID && channelID) {
+            const Member = await this.client.Cache.member.get(userID, guildID);
+            //const Channel = await this.client.Cache.channel.get(channelID);
+            //const Role = await this.client.Cache.role.get(roleID, guildID);
+            const Overwrite = await this.client.Cache.permOverwrite.get(roleID, channelID);
+            if ((Member === null) || (Overwrite === null)) return false, "Data requested not cached";
+            if (!BigInt(BigInt(Overwrite.boundObject.deny) & TargetPerm) === BigInt(0)) return false;
+            else if (!BigInt(BigInt(Overwrite.boundObject.allow) & TargetPerm) === BigInt(0)) return true;
         }
-        return;
+        return false, "Function error";
         //this.client.Cache.permOverwrite;
     }
 };
