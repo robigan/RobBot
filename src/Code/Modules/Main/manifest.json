@@ -5,6 +5,9 @@
     "description": "The main module that stores most of the basic functionality of RobBot, like ping commands system admin commands",
     "author": "robigan#1634",
     "entryPath": "/index.js",
-    "config": {},
+    "config": {
+        "infoCmdID": "863161919816728576",
+        "pingCmdID": "847538619773485068"
+    },
     "type": "executable"
 }

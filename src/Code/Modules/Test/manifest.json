@@ -5,5 +5,8 @@
     "description": "A test module for RobBot's new modular system",
     "author": "robigan#1634",
     "entryPath": "/test.js",
+    "config": {
+        "testCmdID": "846097331518439485"
+    },
     "type": "executable"
 }

@@ -106,28 +106,25 @@ module.exports = class Util {
                 if (!BigInt(BigInt(Overwrite.boundObject.deny) & TargetPerm) === BigInt(0)) return true;
                 else if (!BigInt(BigInt(Overwrite.boundObject.allow) & TargetPerm) === BigInt(0)) return false;
             })) return false;
-            return true;
+            else return true;
         } else if (!roleID && !channelID) { // Incase if channelID and roleID were not specified
             const Member = await this.client.Cache.member.get(userID, guildID);
             if ((Member === null)) return false, "Data requested not cached";
             if (await Member.boundObject.roles.every(async value => { // Just think of it returning true if the user isn't allowed
-                /*const Role = await this.client.Cache.role.get(value, guildID);
-                if ((Role === null)) return true;
-                const RolePerm = BigInt(Role.boundObject.permissions);
-                return !(BigInt(RolePerm & TargetPerm) === BigInt(0) ? false : true);*/
                 return !(await this.checkPerms(userID, guildID, undefined, value, TargetPerm));
             })) return false;
-            return true;
+            else return true;
         } else if (roleID && channelID) {
             const Member = await this.client.Cache.member.get(userID, guildID);
-            //const Channel = await this.client.Cache.channel.get(channelID);
-            //const Role = await this.client.Cache.role.get(roleID, guildID);
             const Overwrite = await this.client.Cache.permOverwrite.get(roleID, channelID);
             if ((Member === null) || (Overwrite === null)) return false, "Data requested not cached";
             if (!BigInt(BigInt(Overwrite.boundObject.deny) & TargetPerm) === BigInt(0)) return false;
             else if (!BigInt(BigInt(Overwrite.boundObject.allow) & TargetPerm) === BigInt(0)) return true;
+            const Role = await this.client.Cache.role.get(roleID, guildID);
+            if (Role === null) return false, "Data requested not cached";
+            const RolePerm = BigInt(Role.boundObject.permissions);
+            return BigInt(RolePerm & TargetPerm) === BigInt(0) ? false : true; // If the Role the user has contains the permission we requested and don't equal 0, then true
         }
         return false, "Function error";
-        //this.client.Cache.permOverwrite;
     }
 };

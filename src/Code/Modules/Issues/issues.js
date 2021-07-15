@@ -1,4 +1,4 @@
-module.exports = class Main {
+module.exports = class Issues {
     /**
      * @constructor
      * @param {import("../../Structures/RobiClient.js")} client
@@ -115,7 +115,7 @@ module.exports = class Main {
                 this.IntPi.editResponse(Data, { "content": "State has been modified!", "flags": 64 });
             }
         };
-        this.IntPi.registerCommand("849636767070289927", Issues, { "name": "issues" });
+        this.IntPi.registerCommand(this.config.issuesCmdID, Issues, { "name": "issues" });
     }
 
     /**

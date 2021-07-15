@@ -56,7 +56,11 @@ module.exports = class Main {
             });
         };
 
-        this.IntPi.registerCommand("863161919816728576", Info, {"name": "info"});
-        this.IntPi.registerCommand("847538619773485068", Ping, {"name": "ping"});
+        this.IntPi.registerCommand(this.config.infoCmdID, Info, {"name": "info"});
+        this.IntPi.registerCommand(this.config.pingCmdID, Ping, {"name": "ping"});
+    }
+
+    async moduleWillUnload() {
+
     }
 };
