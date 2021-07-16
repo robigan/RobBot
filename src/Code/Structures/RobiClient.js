@@ -1,6 +1,10 @@
 const SnowTransfer = require("snowtransfer");
 const RainCache = require("raincache");
 
+/**
+ * RobiClient class
+ * @extends {import("SnowTransfer")}
+ */
 module.exports = class RobiClient extends SnowTransfer {
     /**
      * Initiate the RobiClient for RobBot
@@ -11,6 +15,13 @@ module.exports = class RobiClient extends SnowTransfer {
         super(Config.token, Config.SnowTransfer);
         this.validate(Config);
 
+        /**
+         * @namespace
+         * @property {string} ownerBot
+         * @property {string} appID
+         * @property {string} token
+         * @property {string} selfID
+         */
         this.Identify = {
             "ownerBot": Config.Bot.owner,
             "appID": Config.Bot.appID,
@@ -30,7 +41,7 @@ module.exports = class RobiClient extends SnowTransfer {
             modules: new Map(),
         };
 
-        /** @type {Map<String, Object>} */
+        /** @type {import("./JSDocStruct")} */
         this.Struct = new Map();
         this.Struct.set("MessageEmbed", require("./MessageEmbed.js"));
         this.Struct.set("EventHandler", new (require("./EventHandler.js"))(this));
@@ -78,6 +89,8 @@ module.exports = class RobiClient extends SnowTransfer {
         await this.RainCache.initialize();
         this.Cache = this.RainCache.cache;
 
+        this.Identify.selfID = (await this.Cache.user.get("self")).id;
+
         await this.Database.start();
         await this.Database.loadTypes();
 
@@ -87,8 +100,6 @@ module.exports = class RobiClient extends SnowTransfer {
         }).finally(() => {
             this.Debug.moduleRegister ? console.log("Code    : Register process of Modules complete") : undefined;
         }).catch(err => console.error("Error while loading modules\n", err));
-
-        this.Identify.selfID = (await this.Cache.user.get("self")).id;
 
         this.Struct.get("AmqpClient").initQueueAndConsume(this.Config.amqp.queueCacheCode, undefined, async (event, ch) => {
             const ParsedEvent = JSON.parse(event.content.toString());

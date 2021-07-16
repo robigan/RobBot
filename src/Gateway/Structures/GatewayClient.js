@@ -5,6 +5,10 @@
 
 const CloudStorm = require("cloudstorm");
 
+/**
+ * GatewayClient class
+ * @extends {import("cloudstorm")}
+ */
 module.exports = class GatewayClient extends CloudStorm {
     /**
      * Initiate the gateway service for RobBot

@@ -2,6 +2,10 @@ const RainCache = require("raincache");
 const CustomConnector = require("./CustomConnector.js");
 const RedisStorageEngine = RainCache.Engines.RedisStorageEngine;
 
+/**
+ * CacheClient class
+ * @extends {import("raincache")}
+ */
 module.exports = class CacheClient extends RainCache {
     /**
      * Initiate the caching service for RobBot

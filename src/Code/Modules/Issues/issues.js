@@ -2,6 +2,7 @@ module.exports = class Issues {
     /**
      * @constructor
      * @param {import("../../Structures/RobiClient.js")} client
+     * @param {import("./manifest.json").config} config
      */
     constructor(client, config) {
         this.client = client;
@@ -134,5 +135,9 @@ module.exports = class Issues {
                     .setDescription(Description)
             ]
         });
+    }
+
+    async moduleWillUnload() {
+        this.IntPi.unregisterCommand(this.config.issuesCmdID);
     }
 };

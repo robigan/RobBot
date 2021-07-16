@@ -1,8 +1,13 @@
 const BaseConnector = require("raincache/dist/connector/BaseConnector.js");
 
+/**
+ * CustomConnector class
+ * @extends {import("raincache/dist/connector/BaseConnector.js")}
+ */
 module.exports = class CustomConnector extends BaseConnector {
     /**
-     * 
+     * Instantiating method for the CustomConnector class which patches the AmqpConnector
+     * @constructor
      * @param {import("../../amqp/AmqpClient")} AmqpClient 
      * @param {object} Amqp 
      */

@@ -2,6 +2,7 @@ module.exports = class Test {
     /**
      * @constructor
      * @param {import("../../Structures/RobiClient.js")} client
+     * @param {import("./manifest.json").config} config
      */
     constructor(client, config) {
         this.client = client;
@@ -12,12 +13,12 @@ module.exports = class Test {
 
     async moduleWillLoad() {
         /** @type {import("@amanda/discordtypings").ApplicationCommand} */
-        this.AppCommand = this.client.Struct.get("IntPi").registerCommand(this.config.testCmdID, async (Data) => {
+        this.client.Struct.get("IntPi").registerCommand(this.config.testCmdID, async (Data) => {
             this.IntPi.editResponse(Data, {"content": "Hello World!"});
         }, {"name": "test"});
     }
 
     async moduleWillUnload() {
-        this.IntPi.unregisterCommand(this.AppCommand.id);
+        this.IntPi.unregisterCommand(this.config.testCmdID);
     }
 };

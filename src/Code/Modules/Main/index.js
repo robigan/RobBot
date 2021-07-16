@@ -2,6 +2,7 @@ module.exports = class Main {
     /**
      * @constructor
      * @param {import("../../Structures/RobiClient.js")} client
+     * @param {import("./manifest.json").config} config
      */
     constructor(client, config) {
         this.client = client;
@@ -61,6 +62,7 @@ module.exports = class Main {
     }
 
     async moduleWillUnload() {
-
+        this.IntPi.unregisterCommand(this.config.infoCmdID);
+        this.IntPi.unregisterCommand(this.config.pingCmdID);
     }
 };

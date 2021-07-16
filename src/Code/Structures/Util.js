@@ -29,7 +29,7 @@ module.exports = class Util {
         const Modules = await this.LocRes.glob(await this.LocRes.redirect("/Modules/Code/*/manifest.json"));
         for (const ManifestPath of Modules) {
             delete require.cache[ManifestPath];
-            /** @type {{"id": string, "name": string, "version": string, "description": string, "author": string, "entryPath": string, "config": Object, "type": ("executable" | "dependency" | "other")}} */
+            /** @type {{"id": string, "name": ?string, "version": string, "description": ?string, "author": ?string, "entryPath": string, "config": ?Object, "type": ("executable" | "dependency" | "other"), "manPage": ?(Array<string> | string )}} */
             const Manifest = require(ManifestPath);
 
             if (!Manifest.id) throw new TypeError(`Module (at ${this.LocRes.Path.dirname(ManifestPath)}) doesn't have an ID property`);
@@ -46,11 +46,15 @@ module.exports = class Util {
 
             const ModulePath = this.LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
             delete require.cache[ModulePath];
+
+            /**
+             * @type {import("../Modules/JSDocExample/index.js")}
+             */
             const Module = new (require(ModulePath))(this.client, Manifest.config);
             (async () => {
-                Module.moduleWillLoad();
+                await Module.moduleWillLoad();
                 this.client.Modules.modules.set(Manifest.id, { "manifest": Manifest, "module": Module });
-            })().catch(err => console.error("Error while loading modules\n", err));
+            })().catch(console.error);
         }
     }
 

@@ -5,6 +5,10 @@
 
 const amqp = require("amqplib-plus");
 
+/**
+ * AmqpClient class
+ * @extends {import("amqplib-plus").Connection}
+ */
 module.exports = class AmqpClient extends amqp.Connection {
     /**
      * Initiate the amqp Connection class

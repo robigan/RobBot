@@ -1,0 +1,12 @@
+{
+    "id": "robigan.help",
+    "name": "Help module",
+    "version": "1.0.0",
+    "description": "Module which provides help information",
+    "author": "robigan#1634",
+    "entryPath": "/help.js",
+    "config": {
+        "helpCmdID": ""
+    },
+    "type": "executable"
+}

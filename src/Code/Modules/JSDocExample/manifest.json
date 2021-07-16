@@ -1,0 +1,12 @@
+{
+    "id": "robigan.jsdocexample",
+    "name": "JSDoc Example",
+    "version": "1.0.0",
+    "description": "A module for providing JSDoc types and stuff",
+    "author": "robigan#1634",
+    "entryPath": "/index.js",
+    "config": {
+        "someRandomCmdID": "999999999999999999"
+    },
+    "type": "other"
+}
