@@ -29,7 +29,7 @@ module.exports = class Util {
         const Modules = await this.LocRes.glob(await this.LocRes.redirect("/Modules/Code/*/manifest.json"));
         for (const ManifestPath of Modules) {
             delete require.cache[ManifestPath];
-            /** @type {{"id": string, "name": ?string, "version": string, "description": ?string, "author": ?string, "entryPath": string, "config": ?Object, "type": ("executable" | "dependency" | "other"), "manPage": ?(Array<string> | string )}} */
+            /** @type {import("./JSDocModules.js").manifest}} */
             const Manifest = require(ManifestPath);
 
             if (!Manifest.id) throw new TypeError(`Module (at ${this.LocRes.Path.dirname(ManifestPath)}) doesn't have an ID property`);
@@ -42,7 +42,7 @@ module.exports = class Util {
             Manifest.type = Manifest.type ?? "executable";
 
             if (this.client.Modules.modules.get(Manifest.id)) throw new SyntaxError(`Module ${Manifest.id} has already been loaded`);
-            if (Manifest.type !== "executable") continue;
+            if (Manifest.type === "other") continue;
 
             const ModulePath = this.LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
             delete require.cache[ModulePath];

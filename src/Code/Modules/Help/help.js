@@ -13,20 +13,25 @@ module.exports = class Help {
 
     async moduleWillLoad() {
         /** @param {import("@amanda/discordtypings").InteractionData} Data */
+        const Embed = /*new (*/this.client.Struct.get("MessageEmbed")/*)()*/
+            .setColor("BLURPLE")
+            .setFooter("RobBot mental help")
+            .setTitle("Help page - Main Module")
+            .setDescription("Tip: If you don't see the buttons below, then update your discord client")
+            .setTimestamp();
+        
+        this.client.Modules.modules.forEach(module => {
+            Mod
+        });
+
         const Help = async (Data) => {
             this.IntPi.editResponse(Data, {
                 "embeds": [
-                    new (this.client.Struct.get("MessageEmbed"))()
-                        .setColor("BLURPLE")
-                        .setFooter("RobBot mental help")
-                        .setTitle("Help page - Main Module")
-                        .setDescription("Tip: If you don't see the buttons below, then update your discord client")
-                        .setTimestamp(""),
-                    new (this.client.Struct.get("MessageEmbed"))().set
+                    Embed
                 ]
             });
         };
 
-        this.IntPi.registerCommand(this.config.helpCmdID, Help, {"name": "help"});
+        this.IntPi.registerCommand(this.config.helpCmdID, Help, { "name": "help" });
     }
 };

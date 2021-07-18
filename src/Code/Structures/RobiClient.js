@@ -38,10 +38,11 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Modules = {
             commands: new Map(),
             eventHandlers: new Map(),
+            /** @type {import("./JSDocModules.js").mMap} */
             modules: new Map(),
         };
 
-        /** @type {import("./JSDocStruct")} */
+        /** @type {import("./JSDocStruct.js")} */
         this.Struct = new Map();
         this.Struct.set("MessageEmbed", require("./MessageEmbed.js"));
         this.Struct.set("EventHandler", new (require("./EventHandler.js"))(this));

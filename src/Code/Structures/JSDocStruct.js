@@ -13,7 +13,6 @@
 /**
  * @extends {Map<keyof structMap, structMap[keyof structMap]>}
  */
-// eslint-disable-next-line no-unused-vars
 class SMap extends Map {
     /** @param {Iterable<readonly [keyof structMap, structMap[keyof structMap]]>} entries */
     constructor(entries) {
