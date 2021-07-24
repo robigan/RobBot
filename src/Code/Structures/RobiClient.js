@@ -3,7 +3,7 @@ const RainCache = require("raincache");
 
 /**
  * RobiClient class
- * @extends {import("SnowTransfer")}
+ * @extends {SnowTransfer}
  */
 module.exports = class RobiClient extends SnowTransfer {
     /**

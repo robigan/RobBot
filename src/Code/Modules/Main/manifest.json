@@ -10,5 +10,7 @@
         "pingCmdID": "847538619773485068"
     },
     "type": "executable",
-    "manPage": ""
+    "manPages": [
+        ""
+    ]
 }

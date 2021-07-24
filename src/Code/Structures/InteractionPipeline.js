@@ -87,16 +87,27 @@ module.exports = class InteractionPipeline {
      * @param {string} Type 
      */
     async sendErrorDetails(Data, Err, Type) {
-        await this.editResponse(Data.id, Data.token, {
+        const CreateErrorEmbed = async (ErrorFull, ErrorType) => {
+            return new (this.client.Struct.get("MessageEmbed"))()
+                .setTitle("Error while processing the slash interaction")
+                .addField("Error Type", ErrorType)
+                .addField("Error Details", ErrorFull.toString())
+                .setTimestamp()
+                .setColor("RED");
+        };
+
+        const ErrorEmbed = CreateErrorEmbed(Err, Type);
+
+        await this.editResponse(Data, {
             "embeds": [
-                new (this.client.Struct.get("MessageEmbed"))()
-                    .setTitle("Error while processing the slash interaction")
-                    .addField("Error Type", Type)
-                    .addField("Error Details", Err.toString())
-                    .setTimestamp()
-                    .setColor("RED")
+                ErrorEmbed
             ],
             "flags": 64
+        }).catch(async err => {
+            console.error("CRITICAL ERROR, FAILURE IN ERROR HANDLING, REPORT THIS IMMEDIATELY\nCRITICAL ERROR, FAILURE IN ERROR HANDLING, REPORT THIS IMMEDIATELY\nCRITICAL ERROR, FAILURE IN ERROR HANDLING, REPORT THIS IMMEDIATELY\nSwitching to fallback error system\nError:", err);
+            this.client.channel.createMessage(Data.channel_id, {
+                "embeds": [ErrorEmbed, CreateErrorEmbed("While the above error occured, this error happened too: " + err.toString(), "Interaction Response error")]
+            }).catch(console.error);
         });
     }
 

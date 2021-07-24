@@ -8,5 +8,8 @@
     "config": {
         "issuesCmdID": "849636767070289927"
     },
-    "type": "executable"
+    "type": "selectable",
+    "manPages": [
+        ""
+    ]
 }
