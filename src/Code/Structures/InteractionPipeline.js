@@ -22,7 +22,7 @@ module.exports = class InteractionPipeline {
      * Register a new command
      * @param {import("@amanda/discordtypings").Snowflake} id
      * @param {function(import("@amanda/discordtypings").InteractionData)} command
-     * @param {{"description": string, "category": string, "man": string, "type": ("global" | "guild"), "guild_id": string, "options": import("@amanda/discordtypings").ApplicationCommandOption, "default_permission": boolean, "name": string}} [options]
+     * @param {{"description": ?string, "category": ?string, "man": string, "type": ?("global" | "guild"), "guild_id": ?string, "options": ?import("@amanda/discordtypings").ApplicationCommandOption, "default_permission": ?boolean, "name": string}} [options]
      */
     async registerCommand(id, command, options) {
         options = Object.assign({ "description": "No description provided", "category": "Miscellaneous", "man": "No man page provided", "type": "global", "options": [], "default_permission": true }, options);
@@ -87,7 +87,7 @@ module.exports = class InteractionPipeline {
      * @param {string} Type 
      */
     async sendErrorDetails(Data, Err, Type) {
-        const CreateErrorEmbed = async (ErrorFull, ErrorType) => {
+        /*const CreateErrorEmbed = async (ErrorFull, ErrorType) => {
             return new (this.client.Struct.get("MessageEmbed"))()
                 .setTitle("Error while processing the slash interaction")
                 .addField("Error Type", ErrorType)
@@ -96,18 +96,20 @@ module.exports = class InteractionPipeline {
                 .setColor("RED");
         };
 
-        const ErrorEmbed = CreateErrorEmbed(Err, Type);
+        const ErrorEmbed = CreateErrorEmbed(Err, Type);*/
 
         await this.editResponse(Data, {
             "embeds": [
-                ErrorEmbed
+                new (this.client.Struct.get("MessageEmbed"))()
+                    .setTitle("Error while processing the slash interaction")
+                    .addField("Error Type", Type)
+                    .addField("Error Details", Err.toString())
+                    .setTimestamp()
+                    .setColor("RED")
             ],
             "flags": 64
         }).catch(async err => {
-            console.error("CRITICAL ERROR, FAILURE IN ERROR HANDLING, REPORT THIS IMMEDIATELY\nCRITICAL ERROR, FAILURE IN ERROR HANDLING, REPORT THIS IMMEDIATELY\nCRITICAL ERROR, FAILURE IN ERROR HANDLING, REPORT THIS IMMEDIATELY\nSwitching to fallback error system\nError:", err);
-            this.client.channel.createMessage(Data.channel_id, {
-                "embeds": [ErrorEmbed, CreateErrorEmbed("While the above error occured, this error happened too: " + err.toString(), "Interaction Response error")]
-            }).catch(console.error);
+            console.error("CRITICAL ERROR, FAILURE IN ERROR HANDLING, REPORT THIS IMMEDIATELY\nCRITICAL ERROR, FAILURE IN ERROR HANDLING, REPORT THIS IMMEDIATELY\nCRITICAL ERROR, FAILURE IN ERROR HANDLING, REPORT THIS IMMEDIATELY\nNo fallback system implemented\nError:", err);
         });
     }
 

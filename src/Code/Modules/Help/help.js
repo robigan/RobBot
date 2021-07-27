@@ -17,18 +17,10 @@ module.exports = class Help {
             const Embed = new (this.client.Struct.get("MessageEmbed"))()
                 .setColor("BLURPLE")
                 .setFooter("RobBot mental help")
-                .setTitle("Help page (WIP)")
+                .setTitle("Help Pages")
                 .setDescription("Tip: If you don't see the buttons below, then update your discord client (WIP)")
                 .setTimestamp();
-
-            this.client.Modules.modules.forEach(module => {
-                const manPages = module.manifest.manPages;
-                const pages = manPages ?? [];
-                pages.forEach((manPage, index) => {
-                    Embed.addField(`Man Page ${index} (${module.manifest.name})`, manPage.toString() ?? "No man page provided");
-                });
-                /*Embed.addFields(pages.map((manPage, index) => { `Man Page ${index} (${module.manifest.name})`, manPage.toString(), false }));*/
-            });
+                
             this.IntPi.editResponse(Data, {
                 "embeds": [
                     Embed

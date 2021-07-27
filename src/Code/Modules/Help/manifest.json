@@ -8,8 +8,5 @@
     "config": {
         "helpCmdID": "866272495858090004"
     },
-    "type": "executable",
-    "manPages": [
-        "The man page for Help!"
-    ]
+    "type": "executable"
 }

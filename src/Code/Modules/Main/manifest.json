@@ -9,8 +9,5 @@
         "infoCmdID": "863161919816728576",
         "pingCmdID": "847538619773485068"
     },
-    "type": "executable",
-    "manPages": [
-        ""
-    ]
+    "type": "executable"
 }
