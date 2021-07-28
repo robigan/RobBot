@@ -37,3 +37,6 @@ module.exports.manifestExample = {
     },
     "type": "other"
 };
+
+/** @type {CodeModule} */
+module.exports.codeModule = CodeModule;

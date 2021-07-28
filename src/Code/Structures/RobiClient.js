@@ -36,6 +36,7 @@ module.exports = class RobiClient extends SnowTransfer {
         });
 
         this.Modules = {
+            /** @type {import("./JSDocCommands.js").cMap} */
             commands: new Map(),
             eventHandlers: new Map(),
             /** @type {import("./JSDocModules.js").mMap} */

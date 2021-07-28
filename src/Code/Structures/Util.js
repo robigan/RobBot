@@ -48,7 +48,7 @@ module.exports = class Util {
             delete require.cache[ModulePath];
 
             /**
-             * @type {import("../Modules/JSDocExample/index.js")}
+             * @type {import("./JSDocModules.js").codeModule}
              */
             const Module = new (require(ModulePath))(this.client, Manifest.config);
             (async () => {
