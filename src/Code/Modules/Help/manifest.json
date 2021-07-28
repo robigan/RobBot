@@ -1,12 +1,12 @@
 {
-    "id": "robigan.help",
-    "name": "Help module",
+    "id": "robigan.man",
+    "name": "Man module",
     "version": "1.0.0",
     "description": "Module which provides help information",
     "author": "robigan#1634",
-    "entryPath": "/help.js",
+    "entryPath": "/man.js",
     "config": {
-        "helpCmdID": "866272495858090004"
+        "manCmdID": "869637529610113115"
     },
     "type": "executable"
 }

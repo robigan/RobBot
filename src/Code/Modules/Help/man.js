@@ -1,4 +1,4 @@
-module.exports = class Help {
+module.exports = class Man {
     /**
      * @constructor
      * @param {import("../../Structures/RobiClient.js")} client
@@ -20,7 +20,10 @@ module.exports = class Help {
                 .setTitle("Help Pages")
                 .setDescription("Tip: If you don't see the buttons below, then update your discord client (WIP)")
                 .setTimestamp();
-                
+
+            const Man = this.client.Modules.commands.get(Data.data.options[0].value).options.man ?? "No man page provided";
+            Embed.addField("Man Page:", Man);
+
             this.IntPi.editResponse(Data, {
                 "embeds": [
                     Embed
@@ -28,6 +31,6 @@ module.exports = class Help {
             });
         };
 
-        this.IntPi.registerCommand(this.config.helpCmdID, Help, { "name": "help" });
+        this.IntPi.registerCommand(this.config.manCmdID, Help, { "name": "man", "man": "Hello World!" });
     }
 };
