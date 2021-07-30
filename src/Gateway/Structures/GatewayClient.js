@@ -4,12 +4,13 @@
  */
 
 const CloudStorm = require("cloudstorm");
+const Config = Object.assign(require("./manifest.json").config, require(global.robbotInstances.get("robigan.config").modulePath));
 
 /**
  * GatewayClient class
  * @extends {import("cloudstorm")}
  */
-module.exports = class GatewayClient extends CloudStorm {
+class GatewayClient extends CloudStorm {
     /**
      * Initiate the gateway service for RobBot
      * @constructor
@@ -48,4 +49,7 @@ module.exports = class GatewayClient extends CloudStorm {
             }))));
         });
     }
-};
+}
+
+GatewayClient.start();
+Config.debug.init ? console.log("Gateway : started") : undefined;

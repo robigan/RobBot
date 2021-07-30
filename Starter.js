@@ -10,10 +10,10 @@ const Executer = async (/** @type {Array} */ Selective) => {
     global.robbotInstances = Instances;
     global.robbotAmqpClient = AmqpClient;
 
-    const Modules = await LocRes.glob(await LocRes.redirect("/src/*/manifest.json"));
+    const Modules = await LocRes.glob(await LocRes.redirect("/Modules/All/*/manifest.json"));
     for (const ManifestPath of Modules) {
         delete require.cache[ManifestPath];
-        /** @type {{"id": string, "name": string, "version": string, "description": string, "author": string, "entryPath": string, "type": ("executable" | "dependency" | "other")}} */
+        /** @type {{"id": string, "name": string, "version": string, "description": string, "author": string, "entryPath": string, "config": ?Object, "type": ("executable" | "dependency" | "other")}} */
         const Manifest = require(ManifestPath);
 
         if (!Manifest.id) throw new TypeError(`Module (at ${LocRes.Path.dirname(ManifestPath)}) doesn't have an ID property`);
@@ -31,9 +31,12 @@ const Executer = async (/** @type {Array} */ Selective) => {
         
         const ModulePath = LocRes.Path.dirname(ManifestPath) + (Manifest.entryPath || "/index.js");
         delete require.cache[ModulePath];
-        const Obj = { "manifest": Manifest };
+        /**
+         * @type {{"manifest": Manifest, "path": ModulePath, "module": ?any}}
+         */
+        const Obj = { "manifest": Manifest, "path": ModulePath };
         if (Manifest.type === "executable") {
-            const Module = require(ModulePath)(undefined, AmqpClient);
+            const Module = require(ModulePath)();
             Obj.module = Module;
         }
         Instances.set(Manifest.id, Obj);

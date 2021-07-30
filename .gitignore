@@ -2,4 +2,4 @@
 **/.vscode
 *.disabled
 *.log
-Configs/Secrets.json
+*secrets*

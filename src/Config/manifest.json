@@ -1,0 +1,42 @@
+{
+    "id": "robigan.config",
+    "name": "Config",
+    "version": "1.0.0",
+    "description": "A callable module that will return general config",
+    "author": "robigan#1634",
+    "entryPath": "/Config.js",
+    "type": "dependency",
+    "config": {
+        "Bot": {
+            "appID": "330957377572569089",
+            "owner": "315526915828219906"
+        },
+        "amqp": {
+            "connection": {
+                "host": "localhost",
+                "port": 5672,
+                "user": "guest",
+                "pass": "guest"
+            },
+            "queueGatewayCache": "RobBotGatewayCache",
+            "queueCacheCode": "RobBotCacheCode",
+            "queueCodeGateway": "RobBotCodeGateway"
+        },
+        "debug": {
+            "events": {
+                "type": false,
+                "data": {
+                    "READY": false,
+                    "MESSAGE_CREATE": false,
+                    "INTERACTION_CREATE": false
+                }
+            },
+            "moduleRegister": false,
+            "cache": false,
+            "gateway": false,
+            "opCodes": false,
+            "command": false,
+            "init": false
+        }
+    }
+}

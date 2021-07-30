@@ -4,6 +4,23 @@
     "version": "1.0.0",
     "description": "The Cache instance has all the \"middleware\" needed for caching",
     "author": "robigan#1634",
-    "entryPath": "/Cache.js",
-    "type": "executable"
+    "entryPath": "/Structures/CacheClient.js",
+    "type": "executable",
+    "config": {
+        "RainCache": {
+            "storage": {},
+            "debug": false
+        },
+        "Engines": [
+            {
+                "type": "redis",
+                "engineType": "default",
+                "options": {
+                    "redisOptions": {
+                        "host": "localhost"
+                    }
+                }
+            }
+        ]
+    }
 }

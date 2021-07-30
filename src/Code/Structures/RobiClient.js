@@ -1,11 +1,17 @@
+/**
+ * RobiClient, the executable that handles all the main functionality of the bot
+ * @module code/client
+ */
+
 const SnowTransfer = require("snowtransfer");
 const RainCache = require("raincache");
+const Config = Object.assign(require("./manifest.json").config, require(global.robbotInstances.get("robigan.config").modulePath));
 
 /**
  * RobiClient class
  * @extends {SnowTransfer}
  */
-module.exports = class RobiClient extends SnowTransfer {
+class RobiClient extends SnowTransfer {
     /**
      * Initiate the RobiClient for RobBot
      * @constructor
@@ -29,7 +35,7 @@ module.exports = class RobiClient extends SnowTransfer {
             "selfID": ""
         };
 
-        const RainCacheConfig = require("../../../Configs/CacheClient.json");
+        const RainCacheConfig = require("../../Cache/manifest.json").config;
         RainCacheConfig.Engines.forEach(Unit => {
             if (!(Unit.type === "redis")) return;
             RainCacheConfig.RainCache.storage[Unit.engineType] = new RainCache.Engines.RedisStorageEngine(Unit.options);
@@ -48,7 +54,7 @@ module.exports = class RobiClient extends SnowTransfer {
         this.Struct.set("MessageEmbed", require("./MessageEmbed.js"));
         this.Struct.set("EventHandler", new (require("./EventHandler.js"))(this));
         this.Struct.set("Utils", new (require("./Util.js"))(this));
-        this.Struct.set("Database", new (require("../../Database/Database.js"))(Config));
+        this.Struct.set("Database", global.robbotInstances.get("robigan.database").module);
         this.Struct.set("AmqpClient", global.robbotAmqpClient);
         this.Struct.set("RainCache", new RainCache({
             storage: {
@@ -128,4 +134,8 @@ module.exports = class RobiClient extends SnowTransfer {
             });
         });
     }
-};
+}
+
+const Code = new RobiClient(Config);
+Code.start();
+Config.debug.init ? console.log("Code    : started") : undefined;

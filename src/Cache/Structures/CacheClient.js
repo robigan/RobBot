@@ -1,12 +1,13 @@
 const RainCache = require("raincache");
 const CustomConnector = require("./CustomConnector.js");
 const RedisStorageEngine = RainCache.Engines.RedisStorageEngine;
+const Config = Object.assign(require("./manifest.json").config, require(global.robbotInstances.get("robigan.config").modulePath));
 
 /**
  * CacheClient class
  * @extends {import("raincache")}
  */
-module.exports = class CacheClient extends RainCache {
+class CacheClient extends RainCache {
     /**
      * Initiate the caching service for RobBot
      * @constructor
@@ -33,4 +34,8 @@ module.exports = class CacheClient extends RainCache {
         await this.Connector.initialize();
         await super.initialize();
     }
-};
+}
+
+const Cache = new CacheClient(Config);
+Cache.start();
+Config.debug.init ? console.log("Cache   : started") : undefined;

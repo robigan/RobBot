@@ -4,6 +4,19 @@
     "version": "1.0.0",
     "description": "The Code instance has all the main functionality for the bot to run",
     "author": "robigan#1634",
-    "entryPath": "/Code.js",
-    "type": "executable"
+    "entryPath": "/Structures/RobiClient.js",
+    "type": "executable",
+    "config": {
+        "SnowTransfer": {},
+        "Mongoose": {
+            "connect": {
+                "url": "mongodb://127.0.0.1:27017/RobBot",
+                "options": {
+                    "useNewUrlParser": true,
+                    "useUnifiedTopology": true,
+                    "useFindAndModify": false 
+                }
+            }
+        }
+    }
 }

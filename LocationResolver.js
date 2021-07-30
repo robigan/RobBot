@@ -20,6 +20,10 @@ module.exports = class LocRes {
         {
             "Path": "/Modules/Code",
             "Resolve": "/src/Code/Modules"
+        },
+        {
+            "Path": "/Modules/All",
+            "Resolve": "/src"
         }
     ]) {
         this.Config = Config;

@@ -1,1 +1,1 @@
-require("./Starter.js")(["robigan.code", "robigan.cache", "robigan.gateway", "robigan.amqp", "robigan.database"]);
+require("./Starter.js")(["robigan.config", "robigan.code", "robigan.cache", "robigan.gateway", "robigan.amqp", "robigan.database"]);
