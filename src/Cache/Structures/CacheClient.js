@@ -1,7 +1,7 @@
 const RainCache = require("raincache");
 const CustomConnector = require("./CustomConnector.js");
 const RedisStorageEngine = RainCache.Engines.RedisStorageEngine;
-const Config = Object.assign(require("./manifest.json").config, require(global.robbotInstances.get("robigan.config").modulePath));
+const Config = Object.assign(require("../manifest.json").config, require(global.robbotInstances.get("robigan.config").path));
 
 /**
  * CacheClient class

@@ -5,7 +5,7 @@ const CodeModule = class CodeModule {
 };
 
 /**
- * @typedef {{"id": string, "name": ?string, "version": string, "description": ?string, "author": ?string, "entryPath": string, "config": ?Object, "type": ("executable" | "dependency" | "other" | "selectable")}} manifest
+ * @typedef {{"id": string, "name": ?string, "version": string, "description": ?string, "author": ?string, "entryPath": string, "config": ?Object, "type": ("executable" | "dependency" | "other" )}} manifest
  */
 
 /**

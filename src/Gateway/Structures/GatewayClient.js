@@ -4,7 +4,7 @@
  */
 
 const CloudStorm = require("cloudstorm");
-const Config = Object.assign(require("./manifest.json").config, require(global.robbotInstances.get("robigan.config").modulePath));
+const Config = Object.assign(require("../manifest.json").config, require(global.robbotInstances.get("robigan.config").path));
 
 /**
  * GatewayClient class

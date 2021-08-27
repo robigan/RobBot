@@ -5,7 +5,7 @@
 
 const SnowTransfer = require("snowtransfer");
 const RainCache = require("raincache");
-const Config = Object.assign(require("./manifest.json").config, require(global.robbotInstances.get("robigan.config").modulePath));
+const Config = Object.assign(require("../manifest.json").config, require(global.robbotInstances.get("robigan.config").path));
 
 /**
  * RobiClient class
